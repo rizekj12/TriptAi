@@ -130,7 +130,7 @@ export function TravelerStatus({ status }) {
   const trips = status.tripsTogether;
   const together = `${trips} trip${trips === 1 ? "" : "s"} together`;
   const [dot, text] = status.onTripPlanner
-    ? ["bg-emerald-500", `On TriptAi · ${together}`]
+    ? ["bg-brand-500", `On TriptAi · ${together}`]
     : trips
       ? ["bg-slate-400", `Joined as a guest · ${together}`]
       : ["bg-slate-300", "No trips together yet"];

@@ -28,8 +28,8 @@ function SpinningGlobe() {
           <circle cx="80" cy="80" r="70" />
         </clipPath>
         <radialGradient id="globe-ocean" cx="40%" cy="35%" r="75%">
-          <stop offset="0%" stopColor="#60a5fa" />
-          <stop offset="100%" stopColor="#1e3a8a" />
+          <stop offset="0%" stopColor="#7198f8" />
+          <stop offset="100%" stopColor="#384a7a" />
         </radialGradient>
         <radialGradient id="globe-shade" cx="35%" cy="30%" r="80%">
           <stop offset="0%" stopColor="#ffffff" stopOpacity="0.35" />
@@ -48,7 +48,7 @@ function SpinningGlobe() {
           {[0, 1, 2].map((i) => (
             <g key={i} transform={`translate(${i * LAP - 20}, 0)`}>
               {CONTINENTS.map((d) => (
-                <path key={d} d={d} fill="#34d399" fillOpacity="0.9" />
+                <path key={d} d={d} fill="#a6b7b6" fillOpacity="0.9" />
               ))}
             </g>
           ))}

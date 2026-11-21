@@ -13,7 +13,7 @@ export default function DayStrip({ days, index, onSelect }) {
     "flex h-11 w-11 flex-none items-center justify-center rounded-xl border-2 border-slate-200 bg-white text-slate-800 transition hover:border-orchid-300 hover:text-orchid-800 disabled:cursor-not-allowed disabled:opacity-35";
 
   return (
-    <div className="sticky top-0 z-30 bg-cream/85 py-2 backdrop-blur sm:py-3">
+    <div className="sticky top-0 z-30 bg-page/85 py-2 backdrop-blur sm:py-3">
       <nav aria-label="Days" className="flex items-center gap-2 glass rounded-2xl p-2 shadow-[0_6px_20px_rgba(15,23,42,0.06)] sm:gap-3 sm:rounded-3xl sm:p-3">
         <button onClick={() => onSelect(index - 1)} disabled={index === 0} className={arrow} aria-label="Previous day">
           <ChevronLeft size={20} strokeWidth={2.5} />

@@ -10,7 +10,7 @@ import { theme } from "../../utils/theme";
 const ROLE_LABEL = { owner: "Organizer", member: "Member", guest: "Guest" };
 const ROLE_STYLE = {
   owner: "bg-orchid-100 text-orchid-800",
-  member: "bg-emerald-100 text-emerald-800",
+  member: "bg-brand-100 text-brand-800",
   guest: "bg-gray-100 text-gray-700",
 };
 

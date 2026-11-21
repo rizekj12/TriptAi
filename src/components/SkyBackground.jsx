@@ -10,12 +10,12 @@ export default function SkyBackground() {
           inset: 0;
           background: linear-gradient(
             to bottom,
-            #1e1160 0%,
-            #361eae 25%,
-            #4f2cff 50%,
-            #a855ff 70%,
-            #ff8fa6 85%,
-            #ffcb81 100%
+            #0f2b2b 0%,
+            #1a4343 25%,
+            #3b615e 50%,
+            #7198f8 70%,
+            #f4ba80 85%,
+            #f6dc93 100%
           );
         }
 
@@ -238,19 +238,19 @@ export default function SkyBackground() {
           position: absolute;
           width: 80px;
           height: 80px;
-          background: radial-gradient(circle, #fff9c4 0%, #ffeb3b 40%, #ff9800 80%, transparent 100%);
+          background: radial-gradient(circle, #fbedb6 0%, #f6dc93 40%, #ee8d3b 80%, transparent 100%);
           border-radius: 50%;
           top: 10%;
           right: 15%;
           box-shadow:
-            0 0 40px 15px rgba(255, 200, 50, 0.4),
-            0 0 80px 30px rgba(255, 150, 0, 0.2);
+            0 0 40px 15px rgba(246, 220, 147, 0.4),
+            0 0 80px 30px rgba(238, 141, 59, 0.2);
           animation: pulse-sun 4s ease-in-out infinite;
         }
 
         @keyframes pulse-sun {
-          0%, 100% { box-shadow: 0 0 40px 15px rgba(255, 200, 50, 0.4), 0 0 80px 30px rgba(255, 150, 0, 0.2); }
-          50% { box-shadow: 0 0 50px 20px rgba(255, 200, 50, 0.5), 0 0 100px 40px rgba(255, 150, 0, 0.25); }
+          0%, 100% { box-shadow: 0 0 40px 15px rgba(246, 220, 147, 0.4), 0 0 80px 30px rgba(238, 141, 59, 0.2); }
+          50% { box-shadow: 0 0 50px 20px rgba(246, 220, 147, 0.5), 0 0 100px 40px rgba(238, 141, 59, 0.25); }
         }
 
         /* Overlay for readability */

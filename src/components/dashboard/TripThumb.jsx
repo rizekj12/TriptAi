@@ -5,7 +5,7 @@ import { getCountryFlagOnly } from "../../utils/countryFlags";
 const TILE_COLORS = [
   "from-brand-500 to-orchid-600",
   "from-coral-500 to-coral-600",
-  "from-emerald-500 to-aqua-600",
+  "from-brand-500 to-aqua-400",
   "from-mango-500 to-mango-600",
   "from-aqua-500 to-azure-600",
   "from-orchid-500 to-coral-600",

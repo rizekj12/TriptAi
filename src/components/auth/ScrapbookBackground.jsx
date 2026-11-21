@@ -1,7 +1,7 @@
 import React from "react";
 import { Plane } from "lucide-react";
 
-// Scrapbook page behind the sign-in screens: dark indigo journal paper (so the frosted, white-
+// Scrapbook page behind the sign-in screens: dark emerald journal paper (so the frosted, white-
 // text sign-in card stays readable) with travel polaroids, stamps, a postmark, a boarding pass
 // stub and stickers around the edges. The middle is kept clear for the card. Decorative only.
 
@@ -37,7 +37,7 @@ function Stamp({ className = "", color = "bg-coral-500", value = "45¢", label =
     mask: "radial-gradient(circle at 5px 5px, transparent 3.2px, #000 3.6px) -5px -5px / 10px 10px",
   };
   return (
-    <div className={`absolute bg-[#fdf4e1] p-2.5 shadow-[0_8px_20px_rgba(0,0,0,0.4)] ${className}`} style={perforation}>
+    <div className={`absolute bg-cream p-2.5 shadow-[0_8px_20px_rgba(0,0,0,0.4)] ${className}`} style={perforation}>
       <div className={`flex h-full w-full flex-col items-center justify-between ${color} px-2 py-2 text-white`}>
         <span className="self-end text-xs font-black">{value}</span>
         <Plane size={30} className="-rotate-12" fill="currentColor" />
@@ -73,7 +73,7 @@ function Postmark({ className = "" }) {
 
 function BoardingPass({ className = "" }) {
   return (
-    <div className={`absolute flex overflow-hidden rounded-lg bg-[#fdf4e1] text-slate-800 shadow-[0_10px_24px_rgba(0,0,0,0.45)] ${className}`}>
+    <div className={`absolute flex overflow-hidden rounded-lg bg-cream text-slate-800 shadow-[0_10px_24px_rgba(0,0,0,0.45)] ${className}`}>
       <div className="flex-1 px-4 py-3">
         <p className="text-[9px] font-extrabold tracking-[0.25em] text-brand-600">BOARDING PASS</p>
         <p className="mt-1 flex items-center gap-2 text-2xl font-black tracking-tight">
@@ -110,9 +110,9 @@ function Label({ children, className = "" }) {
 
 export default function ScrapbookBackground() {
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#22144f]">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-page">
       {/* Paper: soft lighting, journal dots and grain */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,255,0.18),transparent_65%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(244,186,128,0.12),transparent_65%)]" />
       <div className="absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#fff_1px,transparent_1.2px)] [background-size:26px_26px]" />
       <div className="absolute inset-0 opacity-[0.18] mix-blend-overlay" style={{ backgroundImage: GRAIN }} />
 

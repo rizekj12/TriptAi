@@ -21,8 +21,8 @@ const SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "S
 
 // Solid colors for trip bars, picked per trip so each keeps its color across months
 const BAR_COLORS = [
-  "bg-brand-600", "bg-coral-600", "bg-emerald-600", "bg-mango-600",
-  "bg-aqua-700", "bg-orchid-600", "bg-lime-700", "bg-coral-600",
+  "bg-brand-600", "bg-coral-600", "bg-brand-800", "bg-mango-600",
+  "bg-aqua-700", "bg-orchid-600", "bg-aqua-500", "bg-coral-600",
 ];
 const colorFor = (id) => BAR_COLORS[[...String(id)].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % BAR_COLORS.length];
 
@@ -118,7 +118,7 @@ export default function CalendarPage() {
   const openTrip = (t) => navigate(t.status === "draft" ? `/drafts/${t.id}` : `/trip/${t.id}`);
 
   return (
-    <div className="min-h-screen bg-cream pb-24 text-slate-900 sm:pb-10">
+    <div className="min-h-screen bg-page pb-24 text-white sm:pb-10">
       <AppHeader />
 
       <div className="mx-auto flex max-w-7xl flex-wrap items-start gap-6 px-4 py-7 sm:px-6">
@@ -127,11 +127,11 @@ export default function CalendarPage() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h1 className="text-2xl font-extrabold tracking-tight">My trips calendar</h1>
-              <p className="text-slate-600">Every trip you've planned or joined, month by month.</p>
+              <p className="text-white/70">Every trip you've planned or joined, month by month.</p>
             </div>
             <Link
               to="/new"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-brand-700"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-coral-500 px-4 py-2.5 text-sm font-bold text-slate-900 transition hover:bg-coral-400"
             >
               <Plus size={16} />
               New itinerary

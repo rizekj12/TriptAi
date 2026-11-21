@@ -17,7 +17,7 @@ import { tripStatus } from "../utils/trips";
 const TABS = [
   { id: "about", label: "About me", Icon: UserRound, iconClass: "bg-brand-100 text-brand-800" },
   { id: "safety", label: "Safety & accessibility", Icon: ShieldAlert, iconClass: "bg-coral-100 text-coral-800" },
-  { id: "documents", label: "Travel documents", Icon: IdCard, iconClass: "bg-emerald-100 text-emerald-800" },
+  { id: "documents", label: "Travel documents", Icon: IdCard, iconClass: "bg-brand-100 text-brand-800" },
   { id: "travelers", label: "Saved travelers", Icon: Users, iconClass: "bg-mango-100 text-mango-800" },
 ];
 
@@ -56,7 +56,7 @@ export default function ProfilePage() {
   const progress = completeness(user, profile.data, documents.data);
 
   return (
-    <div className="min-h-screen bg-cream pb-24 text-slate-900 sm:pb-16">
+    <div className="min-h-screen bg-page pb-24 text-white sm:pb-16">
       <AppHeader />
 
       <main className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
@@ -66,7 +66,7 @@ export default function ProfilePage() {
         </Link>
 
         {/* Identity band */}
-        <section className="mt-4 flex flex-wrap items-center gap-6 glass rounded-[20px] p-6 shadow-[0_1px_2px_rgba(79,44,255,.06),0_8px_24px_rgba(79,44,255,.06)] sm:p-7">
+        <section className="mt-4 flex flex-wrap items-center gap-6 glass rounded-[20px] p-6 shadow-[0_1px_2px_rgba(26,67,67,.06),0_8px_24px_rgba(26,67,67,.06)] sm:p-7">
           <AvatarButton user={user} />
           <div className="min-w-0 flex-[1_1_260px]">
             <h1 className="truncate text-[28px] font-extrabold tracking-tight">{name}</h1>
@@ -115,7 +115,7 @@ export default function ProfilePage() {
         <div className="mt-6 flex flex-wrap items-start gap-6">
           <nav
             aria-label="Profile sections"
-            className="flex max-w-full flex-[1_1_240px] flex-col gap-1 glass rounded-[20px] p-3 shadow-[0_1px_2px_rgba(79,44,255,.06),0_8px_24px_rgba(79,44,255,.06)]"
+            className="flex max-w-full flex-[1_1_240px] flex-col gap-1 glass rounded-[20px] p-3 shadow-[0_1px_2px_rgba(26,67,67,.06),0_8px_24px_rgba(26,67,67,.06)]"
           >
             {TABS.map(({ id, label, Icon, iconClass }) => {
               const current = id === tab;
@@ -144,7 +144,7 @@ export default function ProfilePage() {
             </p>
           </nav>
 
-          <section className="min-w-0 flex-[999_1_560px] glass rounded-[20px] p-6 shadow-[0_1px_2px_rgba(79,44,255,.06),0_8px_24px_rgba(79,44,255,.06)] sm:p-7">
+          <section className="min-w-0 flex-[999_1_560px] glass rounded-[20px] p-6 shadow-[0_1px_2px_rgba(26,67,67,.06),0_8px_24px_rgba(26,67,67,.06)] sm:p-7">
             {tab === "documents" ? (
               <DocumentsSection />
             ) : tab === "travelers" ? (
@@ -204,7 +204,7 @@ function AvatarButton({ user }) {
         onClick={() => fileRef.current?.click()}
         disabled={uploading}
         aria-label="Change profile photo"
-        className="group relative h-24 w-24 flex-none rounded-full bg-brand-500 shadow-[0_0_0_4px_#e6e1ff]"
+        className="group relative h-24 w-24 flex-none rounded-full bg-brand-500 shadow-[0_0_0_4px_#e3e9e8]"
       >
         <span className="flex h-full w-full items-center justify-center overflow-hidden rounded-full">
           {avatarUrl ? <img src={avatarUrl} alt="" className="h-full w-full object-cover" /> : <User size={40} className="text-white" />}

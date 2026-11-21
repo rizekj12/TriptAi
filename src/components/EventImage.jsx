@@ -5,7 +5,7 @@ import { Utensils, Music, Trophy, Palette, Martini, PartyPopper, ShoppingBag, Ca
 const CATEGORY_STYLES = {
   "Food & Drink": { icon: Utensils, gradient: "from-mango-400 to-coral-500" },
   "Music & Dance": { icon: Music, gradient: "from-coral-500 to-orchid-600" },
-  "Sports & Recreation": { icon: Trophy, gradient: "from-emerald-400 to-aqua-600" },
+  "Sports & Recreation": { icon: Trophy, gradient: "from-brand-400 to-aqua-500" },
   "Arts & Culture": { icon: Palette, gradient: "from-azure-400 to-brand-600" },
   "Nightlife": { icon: Martini, gradient: "from-orchid-600 to-slate-900" },
   "Festival": { icon: PartyPopper, gradient: "from-coral-500 to-mango-400" },

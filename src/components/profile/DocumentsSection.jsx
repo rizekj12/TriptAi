@@ -15,7 +15,7 @@ const KIND_STYLE = {
   known_traveler: { Icon: BadgeCheck, className: "bg-brand-100 text-brand-800" },
   drivers_license: { Icon: Car, className: "bg-slate-200 text-slate-800" },
   visa: { Icon: Stamp, className: "bg-mango-100 text-mango-800" },
-  insurance: { Icon: ShieldCheck, className: "bg-emerald-100 text-emerald-800" },
+  insurance: { Icon: ShieldCheck, className: "bg-brand-100 text-brand-800" },
   frequent_flyer: { Icon: Plane, className: "bg-coral-100 text-coral-800" },
   vaccination: { Icon: Syringe, className: "bg-aqua-100 text-aqua-900" },
   other: { Icon: FileText, className: "bg-slate-100 text-slate-700" },
@@ -72,7 +72,7 @@ export default function DocumentsSection() {
           </button>
         }
       />
-      <p className="mt-5 flex items-center gap-3 rounded-xl bg-emerald-50 px-3.5 py-3 text-sm text-emerald-900">
+      <p className="mt-5 flex items-center gap-3 rounded-xl bg-brand-50 px-3.5 py-3 text-sm text-brand-900">
         <Lock size={18} className="flex-none" aria-hidden="true" />
         Only you can see these. They're never shared with travel partners or added to trip PDFs.
       </p>

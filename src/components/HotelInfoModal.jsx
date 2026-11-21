@@ -94,7 +94,7 @@ function HotelInfo({ hotel, onClose }) {
                     {hasPhone && (
                         <a
                             href={`tel:${hotel.phone.replace(/\s+/g, "")}`}
-                            className="flex-1 min-w-[120px] inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                            className="flex-1 min-w-[120px] inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white hover:bg-brand-700"
                             title={`Call ${hotel.phone}`}
                         >
                             <Phone size={16} />
@@ -118,7 +118,7 @@ function HotelInfo({ hotel, onClose }) {
                             href={hotel.links.website}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex-1 min-w-[120px] inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                            className="flex-1 min-w-[120px] inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white hover:bg-brand-700"
                             title="Open website"
                         >
                             <Globe size={18} />

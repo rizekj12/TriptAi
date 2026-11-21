@@ -66,8 +66,8 @@ export default function EventModal({ event, onClose }) {
 
                             {/* Location */}
                             <div className="flex items-start gap-3 md:col-span-2">
-                                <div className="p-2 bg-green-50 rounded-lg">
-                                    <MapPin size={20} className="text-green-600" />
+                                <div className="p-2 bg-brand-50 rounded-lg">
+                                    <MapPin size={20} className="text-brand-600" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-medium text-gray-500 uppercase">Location</p>

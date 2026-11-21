@@ -43,7 +43,7 @@ export function SaveBar({ dirty, saving, onCancel, message }) {
   return (
     <div className="mt-7 flex flex-wrap items-center justify-end gap-3 border-t border-slate-200 pt-5">
       {message && (
-        <p role="status" className={`mr-auto text-sm ${message.type === "error" ? "text-red-600" : "text-emerald-700"}`}>
+        <p role="status" className={`mr-auto text-sm ${message.type === "error" ? "text-red-600" : "text-brand-700"}`}>
           {message.text}
         </p>
       )}
@@ -62,7 +62,7 @@ export function SaveBar({ dirty, saving, onCancel, message }) {
 
 // Small rounded label, e.g. a document's expiry status
 const PILL_TONES = {
-  ok: "bg-emerald-100 text-emerald-800",
+  ok: "bg-brand-100 text-brand-800",
   warn: "bg-mango-100 text-mango-800",
   bad: "bg-red-100 text-red-800",
   none: "bg-slate-100 text-slate-700",

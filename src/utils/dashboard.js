@@ -39,7 +39,7 @@ export function waitProgress(trip, range, today = todayIso()) {
 // Tailwind classes for each badge tone
 export const BADGE_TONES = {
   violet: "bg-orchid-100 text-orchid-800",
-  green: "bg-emerald-100 text-emerald-800",
+  green: "bg-brand-100 text-brand-800",
   amber: "bg-mango-100 text-mango-900",
   red: "bg-red-100 text-red-800",
   slate: "bg-slate-100 text-slate-700",

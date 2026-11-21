@@ -3,7 +3,7 @@ import { Sparkles, Loader2, Home, Pencil } from 'lucide-react';
 
 import ReviewStep from './ReviewStep';
 import { buildQuestions, GROUP_TITLES } from './chatQuestions';
-import Logo, { LogoMark } from '../Logo';
+import { LogoMark } from '../Logo';
 import { useProfile } from '../../hooks/useProfile';
 import { hasDetails } from '../../utils/reservations';
 import { tripLengthDays, isAllowedTripLength } from '../../../shared/tripLength.js';
@@ -68,12 +68,12 @@ function UserBubble({ children, onEdit }) {
                     type="button"
                     onClick={onEdit}
                     aria-label={`Change answer: ${children}`}
-                    className="flex h-9 w-9 flex-none items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-brand-600"
+                    className="flex h-9 w-9 flex-none items-center justify-center rounded-full text-white/50 transition hover:bg-white/10 hover:text-white"
                 >
                     <Pencil size={14} />
                 </button>
             )}
-            <div className="max-w-[80%] rounded-2xl rounded-br-md bg-brand-600 px-4 py-2.5 text-[15px] font-medium leading-relaxed text-white shadow-sm">
+            <div className="max-w-[80%] rounded-2xl rounded-br-md bg-aqua-300 px-4 py-2.5 text-[15px] font-medium leading-relaxed text-slate-900 shadow-sm">
                 {children}
             </div>
         </div>
@@ -119,6 +119,17 @@ export default function TripQuestionnaire({ onComplete, isGenerating, initialFor
 
     const questions = useMemo(() => buildQuestions(formData), [formData]);
     const current = questions.find((q) => !answered.has(q.key)) || questions[questions.length - 1];
+    // Progress bar: one section per group of questions, filled by how many of its questions are answered
+    const progress = useMemo(() => {
+        const groups = [];
+        const byGroup = {};
+        for (const q of questions) {
+            if (!byGroup[q.group]) groups.push((byGroup[q.group] = { group: q.group, total: 0, done: 0 }));
+            byGroup[q.group].total += 1;
+            if (answered.has(q.key)) byGroup[q.group].done += 1;
+        }
+        return groups;
+    }, [questions, answered]);
     const typing = botDelay > 0 && readyKey !== current.key;
 
     // The assistant "types" for a moment before each new question
@@ -187,17 +198,40 @@ export default function TripQuestionnaire({ onComplete, isGenerating, initialFor
         </button>
     );
 
-    // Two columns on large screens: the chat side (60%) and a brand beach illustration (40%).
-    // Chat side, Gemini-style: logo and title on top, then a bordered frame holding the
+    // Gemini-style: logo and title on top, then a bordered frame holding the
     // conversation and, pinned at its bottom, one big rounded box with the answer controls.
     return (
-        <div className="flex h-[100dvh] bg-cream">
-        <div className="flex min-w-0 flex-1 flex-col lg:w-3/5 lg:flex-none">
-            <div className="flex flex-none justify-end px-3 pt-3 sm:px-6 sm:pt-4">
+        <div className="relative isolate flex h-[100dvh] overflow-hidden bg-page text-white">
+            {/* Sage emerald wave from the top corner, stretched wider than the screen (anchored right)
+                so its edge runs gently across the middle */}
+            <svg aria-hidden="true" viewBox="0 0 1000 300" preserveAspectRatio="none" className="pointer-events-none absolute right-0 top-0 -z-10 h-[280px] w-[170%] sm:h-[400px]">
+                <path d="M0 0 H965 C890 40 810 62 680 66 C540 70 470 52 380 108 C290 165 200 200 0 200 Z" fill="#3b615e" />
+            </svg>
+            {/* Huge clouds on each side, half off the screen; the left one sits 100px higher than the right */}
+            <img
+                src="/illustrations/cloud.png"
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none absolute left-0 top-[calc(25%+50px)] -z-10 w-[11rem] -translate-x-1/2 opacity-[0.54] sm:w-[17rem] xl:w-[22rem]"
+            />
+            <img
+                src="/illustrations/cloud.png"
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none absolute right-0 top-[calc(25%+150px)] -z-10 w-[11rem] translate-x-1/2 opacity-[0.54] sm:w-[17rem] xl:w-[22rem]"
+            />
+            {/* Peach pine trees, one big and one small, in the bottom-left corner (wide screens, beside the chat) */}
+            <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-4 -z-10 hidden items-end gap-2 opacity-[0.54] lg:flex xl:left-8 xl:gap-3">
+                <img src="/illustrations/pine-tree.png" alt="" className="h-40 w-auto xl:h-64" />
+                <img src="/illustrations/pine-tree.png" alt="" className="h-28 w-auto xl:h-44" />
+            </div>
+        <div className="flex min-w-0 flex-1 flex-col">
+            <div className="flex flex-none items-center justify-between gap-3 px-3 pt-3 sm:gap-4 sm:px-6 sm:pt-4">
+                <img src="/illustrations/triptai-logo-thin.svg" alt="TriptAi" className="h-8 w-auto sm:h-10" />
                 <button
                     onClick={() => onHome(formData)}
                     disabled={isGenerating}
-                    className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-white/60 px-4 text-sm font-medium text-slate-700 ring-1 ring-slate-200 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                    className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white ring-1 ring-white/20 transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                     <Home size={16} />
                     Save & exit
@@ -205,19 +239,39 @@ export default function TripQuestionnaire({ onComplete, isGenerating, initialFor
             </div>
 
             <div className="flex-none px-4 pb-4 sm:pb-6">
-                <div className="flex justify-center pt-1 sm:pt-4">
-                    <Logo badgeClassName="h-14 w-14 sm:h-20 sm:w-20" markClassName="h-9 w-9 sm:h-12 sm:w-12" textClassName="text-2xl sm:text-4xl" />
-                </div>
-                <h1 className="pt-2 text-center text-2xl font-normal tracking-tight text-slate-900 sm:pt-4 sm:text-5xl">
-                    Plan <span className="font-thin italic">less.</span>{' '}
-                    <span className="text-brand-600">Go <span className="font-bold">more.</span></span>
+                <h1 className="whitespace-nowrap pt-6 text-center font-[Arial,Helvetica,sans-serif] text-[28px] font-normal leading-none sm:pt-10 sm:text-[52px]">
+                    <span className="text-[#2d625e]">Plan <i className="italic">less</i>.</span> <span className="text-[#ffb776]">Go <b className="font-bold">more.</b></span>
                 </h1>
+            </div>
+
+            {/* Sectioned progress bar floating just above the chat, with the current step below it */}
+            <div className="mx-3 mb-3 flex-none sm:mx-auto sm:w-[calc(100%-3rem)] sm:max-w-3xl">
+            <div
+                role="progressbar"
+                aria-label="Trip planning progress"
+                aria-valuemin={0}
+                aria-valuemax={progress.length}
+                aria-valuenow={progress.filter((p) => p.done === p.total).length}
+                aria-valuetext={`On ${GROUP_TITLES[current.group]}`}
+                className="flex gap-1.5 sm:gap-2"
+            >
+                {progress.map((p) => (
+                    <div
+                        key={p.group}
+                        title={GROUP_TITLES[p.group]}
+                        className={`h-2.5 flex-1 overflow-hidden rounded-full transition-colors ${p.group === current.group ? 'bg-white/30' : 'bg-white/15'}`}
+                    >
+                        <div className="h-full rounded-full bg-[#ffb776] transition-[width] duration-500 ease-out" style={{ width: `${(p.done / p.total) * 100}%` }} />
+                    </div>
+                ))}
+            </div>
+            <p className="pt-2 text-center text-xs text-white/60">{`Planning your trip · ${GROUP_TITLES[current.group]}`}</p>
             </div>
 
             {/* The chat's bounds: conversation on top, input box at the bottom */}
             <section
                 aria-label="Trip planning chat"
-                className="mx-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border-2 border-slate-200 sm:mx-auto sm:w-[calc(100%-3rem)] sm:max-w-3xl"
+                className="mx-3 mb-[max(0.75rem,env(safe-area-inset-bottom))] flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border-2 border-white/15 sm:mx-auto sm:mb-5 sm:w-[calc(100%-3rem)] sm:max-w-3xl"
             >
             <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain" aria-live="polite">
                 <div className="space-y-3 px-4 pb-6 pt-5 sm:px-6">
@@ -251,7 +305,7 @@ export default function TripQuestionnaire({ onComplete, isGenerating, initialFor
 
             {/* The input box: answer chips and fields for the current question */}
             <div className="flex-none px-2.5 pb-2.5 sm:px-4 sm:pb-4">
-                <div className="max-h-[50dvh] w-full overflow-y-auto rounded-[28px] border border-slate-200 bg-white px-4 py-3.5 shadow-[0_4px_24px_rgba(15,23,42,0.08)] sm:px-5 sm:py-4">
+                <div className="max-h-[50dvh] w-full overflow-y-auto rounded-[28px] border border-slate-200 bg-white px-4 py-3.5 text-slate-900 shadow-[0_4px_24px_rgba(15,23,42,0.08)] sm:px-5 sm:py-4">
                     {typing ? (
                         <p className="flex min-h-[44px] items-center text-[15px] text-slate-400">TriptAi is typing…</p>
                     ) : onReview ? (
@@ -263,15 +317,8 @@ export default function TripQuestionnaire({ onComplete, isGenerating, initialFor
             </div>
             </section>
 
-            <p className="flex-none px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 text-center text-xs text-slate-500 sm:pb-5">
-                {`Planning your trip · ${GROUP_TITLES[current.group]}`}
-            </p>
         </div>
 
-        {/* Beach illustration in the brand palette (large screens only) */}
-        <aside aria-hidden="true" className="hidden lg:block lg:w-2/5">
-            <img src="/illustrations/beach.svg" alt="" className="h-full w-full object-cover" />
-        </aside>
         </div>
     );
 }

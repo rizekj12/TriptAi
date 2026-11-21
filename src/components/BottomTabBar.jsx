@@ -42,7 +42,7 @@ export default function BottomTabBar() {
         Calendar
       </NavLink>
       <Link to="/new" className="flex min-h-[44px] flex-col items-center justify-end gap-0.5 text-[11px] font-semibold text-slate-600">
-        <span className="-mt-7 flex h-14 w-14 items-center justify-center rounded-full bg-coral-500 text-white shadow-lg ring-4 ring-cream transition hover:bg-coral-600">
+        <span className="-mt-7 flex h-14 w-14 items-center justify-center rounded-full bg-coral-500 text-white shadow-lg ring-4 ring-page transition hover:bg-coral-600">
           <Plus size={26} strokeWidth={2.5} />
         </span>
         New

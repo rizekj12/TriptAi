@@ -7,8 +7,8 @@ import { useAnswerJoinRequest } from "../../hooks/useCrew";
 
 const ICONS = {
   join_request: { Icon: UserPlus, style: "bg-orchid-100 text-orchid-700" },
-  member_joined: { Icon: UserCheck, style: "bg-emerald-100 text-emerald-700" },
-  join_approved: { Icon: UserCheck, style: "bg-emerald-100 text-emerald-700" },
+  member_joined: { Icon: UserCheck, style: "bg-brand-100 text-brand-700" },
+  join_approved: { Icon: UserCheck, style: "bg-brand-100 text-brand-700" },
   itinerary_ready: { Icon: Sparkles, style: "bg-coral-100 text-coral-700" },
   itinerary_failed: { Icon: AlertTriangle, style: "bg-mango-100 text-mango-700" },
 };

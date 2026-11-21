@@ -67,7 +67,7 @@ function FailedScreen({ tripId, formData, error, canRetry }) {
   const retry = useStartGeneration();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-cream px-6 text-center text-slate-900">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-page px-6 text-center text-white">
       <div className="w-full max-w-md glass rounded-3xl p-8 shadow-[0_10px_30px_rgba(15,23,42,0.08)]">
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-red-700">
           <AlertTriangle size={28} />
@@ -172,7 +172,7 @@ export function TripView({ tripId, itinerary, formData, foodSpots, homebases, vi
   const meta = days[dayIndex];
 
   return (
-    <div className="min-h-screen bg-cream text-slate-900">
+    <div className="min-h-screen bg-page text-white">
       <TripHeader
         tripId={tripId}
         formData={formData}
@@ -195,7 +195,7 @@ export function TripView({ tripId, itinerary, formData, foodSpots, homebases, vi
             <DayStrip days={days} index={dayIndex} onSelect={selectDay} />
 
             <div ref={dayTop} className="scroll-mt-32 px-1 pb-3 pt-2 sm:pt-3">
-              <p className="text-xs font-extrabold uppercase tracking-wider text-orchid-700 sm:text-[13px]">
+              <p className="text-xs font-extrabold uppercase tracking-wider text-aqua-300 sm:text-[13px]">
                 Day {meta.n} of {days.length}
                 {meta.longDate && ` · ${meta.longDate}`}
                 {meta.city && ` · ${meta.city}`}

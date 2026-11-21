@@ -105,7 +105,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-cream pb-24 text-slate-900 sm:pb-0">
+    <div className="min-h-screen bg-page pb-24 text-white sm:pb-0">
       <AppHeader />
 
       {loading ? (
@@ -206,7 +206,7 @@ export default function DashboardPage() {
             </section>
 
             {/* Past trips */}
-            <section className="rounded-3xl bg-slate-200/80 p-5 sm:p-6">
+            <section className="rounded-3xl bg-slate-200/80 p-5 text-slate-900 sm:p-6">
               <h2 className="flex items-center gap-2 text-xl font-extrabold">
                 Past trips
                 <span className="rounded-full bg-white/60 px-2.5 py-0.5 text-sm text-slate-700">{past.length}</span>

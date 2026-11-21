@@ -14,7 +14,7 @@ export default function NotificationsPage() {
   const waiting = all.filter((n) => n.type === "join_request" && !n.data?.resolution).length;
 
   return (
-    <div className="relative min-h-screen bg-cream pb-24 text-slate-900 sm:pb-16">
+    <div className="relative min-h-screen bg-page pb-24 text-white sm:pb-16">
       <AppHeader />
 
       <div className="mx-auto mt-6 max-w-2xl px-4 md:px-8">
@@ -22,7 +22,7 @@ export default function NotificationsPage() {
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">Notifications</h1>
             {waiting > 0 && (
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-white/70">
                 {waiting} join request{waiting === 1 ? "" : "s"} waiting for you
               </p>
             )}
@@ -30,7 +30,7 @@ export default function NotificationsPage() {
           {unreadCount > 0 && (
             <button
               onClick={() => markRead.mutate()}
-              className="rounded-xl bg-white/60 px-3 py-2 text-sm font-medium ring-1 ring-slate-200 transition hover:bg-white"
+              className="rounded-xl bg-white/10 px-3 py-2 text-sm font-medium text-white ring-1 ring-white/20 transition hover:bg-white/20"
             >
               Mark all read
             </button>

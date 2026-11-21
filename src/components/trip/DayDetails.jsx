@@ -48,7 +48,7 @@ export default function DayDetails({ day, spots, canEdit = false, tripId, days =
               const key = keys[i];
               const isDone = done.has(key);
               const circle = `flex h-8 w-8 flex-none items-center justify-center rounded-full text-[13px] font-extrabold text-white ${
-                isDone ? "bg-emerald-600" : "bg-orchid-700"
+                isDone ? "bg-brand-600" : "bg-orchid-700"
               }`;
               return (
                 <li key={key} className="flex gap-3.5">
@@ -76,7 +76,7 @@ export default function DayDetails({ day, spots, canEdit = false, tripId, days =
                     </p>
                     {spot.address && <p className="mt-0.5 text-sm text-slate-600">{spot.address}</p>}
                     {spot.estimatedCost && (
-                      <p className="mt-0.5 text-sm font-semibold text-emerald-800">
+                      <p className="mt-0.5 text-sm font-semibold text-brand-800">
                         <span className="sr-only">Estimated cost: </span>≈ {spot.estimatedCost}
                       </p>
                     )}

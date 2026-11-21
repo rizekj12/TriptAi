@@ -39,7 +39,7 @@ function CodeChip({ code }) {
       title="Copy confirmation code"
     >
       {code.toUpperCase()}
-      {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} className="opacity-60" />}
+      {copied ? <Check size={14} className="text-brand-600" /> : <Copy size={14} className="opacity-60" />}
     </button>
   );
 }

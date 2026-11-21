@@ -33,9 +33,9 @@ export default function NextTripCard({ entry, onDownloadPdf, downloading, isOwne
           {/* Progress ring with the countdown */}
           <div className="relative h-28 w-28 flex-none">
             <svg width="112" height="112" viewBox="0 0 112 112" aria-hidden="true">
-              <circle cx="56" cy="56" r="48" fill="none" stroke="#e6e1ff" strokeWidth="10" />
+              <circle cx="56" cy="56" r="48" fill="none" stroke="#e3e9e8" strokeWidth="10" />
               <circle
-                cx="56" cy="56" r="48" fill="none" stroke="#4f2cff" strokeWidth="10" strokeLinecap="round"
+                cx="56" cy="56" r="48" fill="none" stroke="#3b615e" strokeWidth="10" strokeLinecap="round"
                 strokeDasharray={RING} strokeDashoffset={RING * (1 - progress)} transform="rotate(-90 56 56)"
               />
             </svg>
@@ -71,7 +71,7 @@ export default function NextTripCard({ entry, onDownloadPdf, downloading, isOwne
                 <>
                   <span
                     className={`flex h-[22px] w-[22px] flex-none items-center justify-center rounded-full ${
-                      item.done ? "bg-emerald-100 text-emerald-700" : "border border-slate-300 bg-white"
+                      item.done ? "bg-brand-100 text-brand-700" : "border border-slate-300 bg-white"
                     }`}
                   >
                     {item.done && <Check size={13} strokeWidth={3} />}

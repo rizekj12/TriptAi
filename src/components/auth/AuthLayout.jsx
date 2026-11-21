@@ -18,7 +18,7 @@ export default function AuthLayout({ children }) {
         className="mb-6 flex flex-col items-center text-center"
       >
         <h1 className="drop-shadow" aria-label="TriptAi">
-          <Logo markClassName="h-14 w-14" textClassName="text-4xl" />
+          <Logo badgeClassName="h-16 w-16" markClassName="h-10 w-10" textClassName="text-4xl" colors={{ tript: "#ffffff" }} />
         </h1>
         <p className="mt-1 text-sm text-white/80 drop-shadow">AI-planned trips, ready when you land</p>
       </motion.div>
@@ -74,7 +74,7 @@ export function AuthMessage({ type = "error", children }) {
   return (
     <div
       className={`rounded-xl px-4 py-2.5 text-sm ${
-        type === "success" ? "bg-green-500/30 text-green-50" : "bg-red-500/30 text-red-50"
+        type === "success" ? "bg-brand-500/30 text-brand-50" : "bg-red-500/30 text-red-50"
       }`}
     >
       {children}
