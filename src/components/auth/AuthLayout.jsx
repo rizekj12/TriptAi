@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
-import Logo from "../Logo";
 import ScrapbookBackground from "./ScrapbookBackground";
 
 // Shared shell for the sign-in, sign-up and password screens: scrapbook background,
@@ -15,12 +14,18 @@ export default function AuthLayout({ children }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-6 flex flex-col items-center text-center"
+        className="mb-6 flex items-center gap-3"
       >
-        <h1 className="drop-shadow" aria-label="TriptAi">
-          <Logo badgeClassName="h-16 w-16" markClassName="h-10 w-10" textClassName="text-4xl" colors={{ tript: "#ffffff" }} />
-        </h1>
-        <p className="mt-1 text-sm text-white/80 drop-shadow">AI-planned trips, ready when you land</p>
+        {/* Plane icon in a white circle, then the wordmark with the tagline left-aligned under it */}
+        <span className="glass-strong flex h-[73px] w-[73px] flex-none items-center justify-center rounded-full shadow-sm">
+          <img src="/illustrations/plane-mark.png" alt="" className="h-[46px] w-[46px] object-contain" />
+        </span>
+        <div className="flex flex-col items-start">
+          <h1 className="drop-shadow">
+            <img src="/illustrations/triptai-wordmark-white.svg" alt="TriptAi" className="h-[46px] w-auto" />
+          </h1>
+          <p className="mt-1 text-sm text-white/80 drop-shadow">Plan less. Travel more.</p>
+        </div>
       </motion.div>
 
       <motion.div
@@ -87,7 +92,7 @@ export function AuthButton({ busy, busyLabel, children }) {
     <button
       type="submit"
       disabled={busy}
-      className="w-full rounded-xl bg-gradient-to-r from-coral-500 to-orchid-600 py-3 text-sm font-semibold shadow-lg transition hover:shadow-xl disabled:opacity-60"
+      className="w-full rounded-xl border-2 border-white bg-page py-3 font-[Arial,Helvetica,sans-serif] text-[18px] font-normal leading-tight text-white shadow-lg transition hover:bg-brand-950 hover:shadow-xl disabled:opacity-60"
     >
       {busy ? busyLabel : children}
     </button>
