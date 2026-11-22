@@ -212,19 +212,19 @@ export default function TripQuestionnaire({ onComplete, isGenerating, initialFor
     // conversation and, pinned at its bottom, one big rounded box with the answer controls.
     return (
         <div className="relative isolate flex h-[100dvh] overflow-hidden bg-[#cdeae8] bg-[linear-gradient(to_bottom,#f6fbfb_0%,#f6fbfb_14%,#cdeae8_32%)] text-[#2b4142]">
-            {/* Slate wave across the top: deepest at the left edge, thinning to nothing at the right */}
+            {/* Solid dark green wave across the top: deepest at the left edge, thinning to nothing at the right */}
             <svg aria-hidden="true" viewBox="0 0 1000 120" preserveAspectRatio="none" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[88px] w-full sm:h-[122px]">
-                <path d="M0 0 H1000 C860 38 640 52 420 62 C230 71 100 88 0 120 Z" fill="#4a605e" />
+                <path d="M0 0 H1000 C860 38 640 52 420 62 C230 71 100 88 0 120 Z" fill="#2b4142" />
             </svg>
-            {/* Big near-white clouds half off each side (the left one lower), and a faint slate plane with
+            {/* Big near-white clouds half off each side (the left one lower), and a near-white plane (the clouds' color) with
                 sparkles flying up out of the bottom-left corner toward the upper right. Drawn with our artwork as a mask so
                 they take this page's colors. */}
             <div aria-hidden="true" className="pointer-events-none absolute left-0 top-[30%] -z-10 aspect-[1200/756] w-[11rem] -translate-x-[38%] bg-[#e8f6f5] sm:w-[19rem] xl:w-[24rem]" style={maskOf('/illustrations/cloud.png')} />
             <div aria-hidden="true" className="pointer-events-none absolute right-0 top-[16%] -z-10 aspect-[1200/756] w-[11rem] translate-x-[30%] -scale-x-100 bg-[#e8f6f5] sm:w-[19rem] xl:w-[24rem]" style={maskOf('/illustrations/cloud.png')} />
-            <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 -z-10 hidden aspect-[1231/1400] w-[17rem] -translate-x-[14%] translate-y-[14%] rotate-[18deg] bg-[#4a605e] opacity-[0.54] lg:block xl:w-[22rem]" style={maskOf('/illustrations/plane-sparkles-solid.png')} />
+            <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 -z-10 hidden aspect-[1231/1400] w-[17rem] -translate-x-[14%] translate-y-[14%] rotate-[18deg] bg-[#e8f6f5] lg:block xl:w-[22rem]" style={maskOf('/illustrations/plane-sparkles-solid.png')} />
         <div className="flex min-w-0 flex-1 flex-col">
             <div className="flex flex-none items-center justify-between gap-3 px-4 pt-3 sm:gap-4 sm:px-10 sm:pt-6">
-                <img src="/illustrations/triptai-logo-day2.svg" alt="TriptAi" className="h-9 w-auto sm:h-12" />
+                <img src="/illustrations/triptai-logo-day3.svg" alt="TriptAi" className="h-9 w-auto sm:h-12" />
                 <button
                     onClick={() => onHome(formData)}
                     disabled={isGenerating}
