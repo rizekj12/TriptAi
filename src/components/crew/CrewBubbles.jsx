@@ -71,7 +71,7 @@ export default function CrewBubbles({ tripId, destination, tone = "dark", crew: 
       )}
 
       <Modal open={listOpen} onClose={() => setListOpen(false)} className="max-w-sm p-5">
-        <h2 className="text-lg font-bold text-gray-900">Who's going</h2>
+        <h2 className="text-lg font-bold text-ink-800">Who's going</h2>
         <ul className="mt-3 divide-y divide-gray-100">
           {people.map((p) => (
             <li key={p.id} className="flex items-center gap-3 py-2.5">

@@ -67,7 +67,7 @@ export default function JoinPage() {
     <AuthLayout>
       {/* Trip preview */}
       <div className="text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.14em] text-mango-200">You're invited</p>
+        <p className="text-xs font-bold uppercase tracking-[0.14em] text-mango-300">You're invited</p>
         <h2 className="mt-2 text-2xl font-extrabold">
           {getCountryFlagOnly(trip.destination)} {trip.destination}
         </h2>
@@ -99,7 +99,7 @@ export default function JoinPage() {
               join.reset();
               setMode("signin");
             }}
-            className="w-full rounded-xl bg-white/15 py-3 text-sm font-semibold ring-1 ring-white/30 hover:bg-white/25"
+            className="w-full rounded-xl bg-white/15 py-3 text-sm font-semibold ring-1 ring-white/25 hover:bg-white/25"
           >
             Sign in again
           </button>
@@ -107,7 +107,7 @@ export default function JoinPage() {
 
         {requested ? (
           <div className="rounded-xl bg-white/15 p-4 text-center ring-1 ring-white/25">
-            <Hourglass className="mx-auto mb-2 text-mango-200" size={22} />
+            <Hourglass className="mx-auto mb-2 text-mango-300" size={22} />
             <p className="font-semibold">Request sent</p>
             <p className="mt-1 text-sm text-white/80">
               {firstName} will get a notification. Once they approve you, the trip shows up on your dashboard.
@@ -149,7 +149,7 @@ export default function JoinPage() {
             </button>
             <button
               onClick={() => setMode("guest")}
-              className="w-full rounded-xl bg-white/15 py-3 text-sm font-semibold ring-1 ring-white/30 hover:bg-white/25"
+              className="w-full rounded-xl bg-white/15 py-3 text-sm font-semibold ring-1 ring-white/25 hover:bg-white/25"
             >
               Join as a guest
             </button>

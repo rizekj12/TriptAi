@@ -167,7 +167,7 @@ function TravelerForm({ traveler, onClose }) {
   const error = invalid || save.error?.message || remove.error?.message;
   return (
     <form onSubmit={submit}>
-      <h2 className="text-lg font-extrabold text-slate-900">{traveler.id ? "Edit traveler" : "Add a traveler"}</h2>
+      <h2 className="text-lg font-extrabold text-ink-800">{traveler.id ? "Edit traveler" : "Add a traveler"}</h2>
       <p className="mt-1 text-sm text-slate-600">With an email, you can send them a trip invite in one tap.</p>
       <div className="mt-5 space-y-4">
         <Field label="Name" htmlFor="traveler-name">
@@ -250,7 +250,7 @@ function InviteToTrip({ traveler, onClose }) {
 
   return (
     <div>
-      <h2 className="text-lg font-extrabold text-slate-900">Invite {firstName} to a trip</h2>
+      <h2 className="text-lg font-extrabold text-ink-800">Invite {firstName} to a trip</h2>
 
       {!trip ? (
         <>

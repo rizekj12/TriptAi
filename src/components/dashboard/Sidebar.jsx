@@ -1,20 +1,33 @@
 import React from "react";
+import { Lightbulb } from "lucide-react";
 import { Link } from "react-router-dom";
 import TripThumb from "./TripThumb";
 import { getCountryFlagOnly } from "../../utils/countryFlags";
 import { FEATURED_DESTINATIONS } from "../../data/destinationImages";
 import { WEEKDAYS, monthWeeks, monthLabel, todayIso } from "../../utils/calendar";
 import { tripName, useHomeCountry } from "../../utils/tripName";
+import { colorForKey } from "../../utils/tripColors";
 
 const card = "glass rounded-3xl p-5 shadow-[0_6px_20px_rgba(15,23,42,0.05)]";
 
-// One month with trip days highlighted; links to the full calendar on that month
+// Small round badge for a section heading: a solid white icon in a dark slate circle. Line-only
+// icons (like the history clock, which has no shape to fill) pass filled={false}.
+export function HeadingIcon({ icon: Icon, filled = true }) {
+  return (
+    <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-[#2d625e]" aria-hidden="true">
+      <Icon size={17} className="text-white" fill={filled ? "currentColor" : "none"} strokeWidth={filled ? 2 : 2.5} />
+    </span>
+  );
+}
+
+// One month with trip days highlighted in each trip's own color (the same one the full calendar
+// uses); links to the full calendar on that month
 export function MiniCalendar({ month, trips }) {
   const homeCountry = useHomeCountry();
   const today = todayIso();
   const prefix = `${month.year}-${String(month.month + 1).padStart(2, "0")}`;
   const dated = trips.filter((t) => t.range && t.status !== "draft");
-  const onTrip = (iso) => dated.some((t) => t.range.start <= iso && t.range.end >= iso);
+  const tripOn = (iso) => dated.find((t) => t.range.start <= iso && t.range.end >= iso);
   const inMonth = dated.filter((t) => t.range.start <= `${prefix}-31` && t.range.end >= `${prefix}-01`);
 
   return (
@@ -31,12 +44,12 @@ export function MiniCalendar({ month, trips }) {
       <div className="mt-1.5 grid grid-cols-7 gap-1">
         {monthWeeks(month).flat().map((iso) => {
           const here = iso.startsWith(prefix);
-          const trip = here && onTrip(iso);
+          const trip = here && tripOn(iso);
           return (
             <span
               key={iso}
               className={`flex h-8 items-center justify-center rounded-lg text-[13px] font-semibold ${
-                !here ? "text-transparent" : trip ? "bg-orchid-600 text-white" : iso === today ? "ring-2 ring-orchid-400 text-slate-800" : "text-slate-700"
+                !here ? "text-transparent" : trip ? `${colorForKey(trip.trip.id)} text-white` : iso === today ? "ring-2 ring-orchid-400 text-slate-800" : "text-slate-700"
               }`}
             >
               {Number(iso.slice(8))}
@@ -48,7 +61,7 @@ export function MiniCalendar({ month, trips }) {
         <ul className="mt-3 space-y-1">
           {inMonth.map((t) => (
             <li key={t.trip.id} className="flex items-center gap-2 text-[13px] text-slate-700">
-              <span className="h-3 w-3 rounded bg-orchid-600" />
+              <span className={`h-3 w-3 rounded ${colorForKey(t.trip.id)}`} />
               {getCountryFlagOnly(t.trip.destination)} {tripName(t.trip, homeCountry)}
             </li>
           ))}
@@ -86,7 +99,10 @@ export function TripIdeas({ exclude = [] }) {
   if (!ideas.length) return null;
   return (
     <section className={card}>
-      <h2 className="text-base font-extrabold">Ideas for your next trip</h2>
+      <h2 className="flex items-center gap-2 text-base font-extrabold">
+        <HeadingIcon icon={Lightbulb} />
+        Ideas for your next trip
+      </h2>
       <ul className="mt-3 space-y-2.5">
         {ideas.map((d) => (
           <li key={d.name}>

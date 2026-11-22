@@ -13,7 +13,7 @@ export default function AppHeader() {
     <header className="relative z-20 glass-strong border-b border-white/60 text-slate-900 shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
         <Link to="/" className="flex min-w-0 items-center gap-2.5" aria-label="TriptAi home">
-          <Logo markClassName="h-9 w-9" textClassName="text-xl sm:text-2xl" />
+          <Logo markClassName="h-9 w-9" textClassName="text-xl sm:text-2xl" colors={{ ai: "#ff9f16" }} />
         </Link>
 
         <div className="flex flex-none items-center gap-2 sm:gap-3">

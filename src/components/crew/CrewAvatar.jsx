@@ -1,7 +1,6 @@
 import React from "react";
+import { colorForKey as colorFor } from "../../utils/tripColors";
 
-const COLORS = ["bg-brand-500", "bg-coral-500", "bg-brand-800", "bg-mango-500", "bg-aqua-600", "bg-orchid-500"];
-const colorFor = (name = "") => COLORS[[...name].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % COLORS.length];
 const initials = (name = "") =>
   name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase()).join("") || "?";
 

@@ -208,7 +208,7 @@ function AttachmentViewer({ document, onClose }) {
         <div>
           <div className="mb-3 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h2 className="text-lg font-extrabold text-slate-900">{kind.label}</h2>
+              <h2 className="text-lg font-extrabold text-ink-800">{kind.label}</h2>
               <p className="truncate text-sm text-slate-600">
                 {attachment.name} · {formatSize(attachment.size)}
               </p>
@@ -310,7 +310,7 @@ function DocumentForm({ document, onClose }) {
   const error = submitError ? { message: submitError } : remove.error;
   return (
     <form onSubmit={submit}>
-      <h2 className="text-lg font-extrabold text-slate-900">{document.id ? `Edit ${kind.label.toLowerCase()}` : "Add a travel document"}</h2>
+      <h2 className="text-lg font-extrabold text-ink-800">{document.id ? `Edit ${kind.label.toLowerCase()}` : "Add a travel document"}</h2>
       <p className="mt-1 text-sm text-slate-600">Only you can see this.</p>
 
       <div className="mt-5 space-y-4">

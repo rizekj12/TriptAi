@@ -89,7 +89,7 @@ function HotelSearch({ city, country, onSelect, onClose }) {
             {/* Header */}
             <div className="flex items-center justify-between px-6 pt-6 pb-4">
                 <div>
-                    <h3 className="text-lg font-bold text-gray-900">Search Hotels</h3>
+                    <h3 className="text-lg font-bold text-ink-800">Search Hotels</h3>
                     <p className="text-sm text-gray-500">{city}{country ? `, ${country}` : ''}</p>
                 </div>
                 <button

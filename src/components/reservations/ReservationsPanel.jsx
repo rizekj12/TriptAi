@@ -53,7 +53,7 @@ function ReservationCard({ icon: Icon, title, badge, lines, code, emptyCodeHint,
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h3 className="font-semibold text-gray-900">{title}</h3>
+            <h3 className="font-semibold text-ink-800">{title}</h3>
             {badge && <p className="text-xs text-gray-500">{badge}</p>}
           </div>
           <button
@@ -225,7 +225,7 @@ export function ReservationsView({ flights, hotels, save, saveChange, deleteChan
       <Modal open={!!editing} onClose={close} className="max-w-lg max-h-[90vh] overflow-y-auto p-6">
         {editing && (
           <>
-            <h3 className="mb-4 text-lg font-bold text-gray-900">
+            <h3 className="mb-4 text-lg font-bold text-ink-800">
               {editing.isNew ? "Add" : "Edit"} {editing.kind}
             </h3>
             {editing.kind === "flight" ? (

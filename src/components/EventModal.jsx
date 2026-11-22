@@ -37,7 +37,7 @@ export default function EventModal({ event, onClose }) {
                     <div className="p-6 space-y-6">
                         {/* Title */}
                         <div>
-                            <h2 className="text-3xl font-bold text-gray-900">{event.title}</h2>
+                            <h2 className="text-3xl font-bold text-ink-800">{event.title}</h2>
                         </div>
 
                         {/* Details Grid */}
@@ -92,7 +92,7 @@ export default function EventModal({ event, onClose }) {
 
                         {/* Description */}
                         <div>
-                            <h3 className="text-sm font-semibold text-gray-900 mb-2">About This Event</h3>
+                            <h3 className="text-sm font-semibold text-ink-800 mb-2">About This Event</h3>
                             <p className="text-gray-700 leading-relaxed">{event.description}</p>
                         </div>
 

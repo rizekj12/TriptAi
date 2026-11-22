@@ -3,12 +3,16 @@
 @tailwind utilities;
 
 html, body, #root { height: 100%; }
-body { background-color: #1a4343; }
+body { background-color: #cdeae8; }
 
 @layer base {
   /* Headers and titles use the logo font, Hobo Std (font-logo; falls back to Nunito where it
      isn't available). Hobo has one weight, so don't let font-bold/extrabold fake a heavier one. */
   h1, h2, h3 { @apply font-logo; font-synthesis: none; letter-spacing: normal; }
+  /* Titles are the palette's dark teal-green, not black. Headings on dark surfaces (anything that
+     sets white text, like the sign-in card or the slate stat panels) keep the white. */
+  h1, h2, h3 { color: theme("colors.ink.800"); }
+  .text-white :is(h1, h2, h3) { color: inherit; }
 }
 
 @layer components {
@@ -20,3 +24,4 @@ body { background-color: #1a4343; }
 }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+

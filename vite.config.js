@@ -20,9 +20,9 @@ export default defineConfig({
         name: "TriptAi",
         short_name: "TriptAi",
         description: "AI-planned trips with maps, food spots, reservations and offline PDFs.",
-        // Matches the dark emerald site background
-        theme_color: "#1a4343",
-        background_color: "#1a4343",
+        // Matches the pale aqua site background
+        theme_color: "#cdeae8",
+        background_color: "#cdeae8",
         display: "standalone",
         start_url: "/",
         icons: [

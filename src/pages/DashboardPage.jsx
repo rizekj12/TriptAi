@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Trash2, MoreVertical, RotateCcw, Download, Loader2, Compass, LogOut } from "lucide-react";
+import { Plus, Trash2, MoreVertical, RotateCcw, Download, Loader2, Compass, LogOut, Plane, History } from "lucide-react";
 import { useTrips, useDeleteTrip, useStartGeneration, useDownloadPdf } from "../hooks/useTrips";
 import { useClickOutside } from "../hooks/useClickOutside";
 import { useAuth } from "../context/AuthContext";
@@ -10,7 +10,7 @@ import BottomTabBar from "../components/BottomTabBar";
 import TripThumb from "../components/dashboard/TripThumb";
 import NextTripCard from "../components/dashboard/NextTripCard";
 import FirstTripHero from "../components/dashboard/FirstTripHero";
-import { MiniCalendar, TravelStats, TripIdeas } from "../components/dashboard/Sidebar";
+import { MiniCalendar, TravelStats, TripIdeas, HeadingIcon } from "../components/dashboard/Sidebar";
 import { getCountryFlagOnly } from "../utils/countryFlags";
 import { formatRange, monthOf, todayIso } from "../utils/calendar";
 import { describeTrips, tripBadge, travelStats, firstName, BADGE_TONES } from "../utils/dashboard";
@@ -105,7 +105,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-page pb-24 text-white sm:pb-0">
+    <div className="min-h-screen bg-page pb-24 text-ink-800 sm:pb-0">
       <AppHeader />
 
       {loading ? (
@@ -120,7 +120,7 @@ export default function DashboardPage() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-start gap-6 px-4 py-7 sm:px-6">
           {/* Main column */}
           <main className="min-w-0 flex-[999_1_620px] space-y-6">
-            <p className="text-2xl font-extrabold tracking-tight">Welcome back{name ? `, ${name}` : ""}</p>
+            <p className="font-logo text-2xl font-extrabold tracking-normal [font-synthesis:none]">Welcome back{name ? `, ${name}` : ""}</p>
 
             {next ? (
               <NextTripCard
@@ -148,6 +148,7 @@ export default function DashboardPage() {
             <section className={card}>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="flex items-center gap-2 text-xl font-extrabold">
+                  <HeadingIcon icon={Plane} />
                   Upcoming trips
                   <span className="rounded-full bg-orchid-100 px-2.5 py-0.5 text-sm text-orchid-800">{upcoming.length}</span>
                 </h2>
@@ -208,6 +209,7 @@ export default function DashboardPage() {
             {/* Past trips */}
             <section className="rounded-3xl bg-slate-200/80 p-5 text-slate-900 sm:p-6">
               <h2 className="flex items-center gap-2 text-xl font-extrabold">
+                <HeadingIcon icon={History} filled={false} />
                 Past trips
                 <span className="rounded-full bg-white/60 px-2.5 py-0.5 text-sm text-slate-700">{past.length}</span>
               </h2>

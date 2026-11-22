@@ -16,13 +16,13 @@ import { AGE_GROUPS, CURRENCIES, BUDGET_PARTS, INTERESTS, INTEREST_WEIGHTS } fro
 // 44px touch target and inputs use 16px text so phones don't zoom in.
 
 const chipClass = (selected = false) =>
-    `min-h-[44px] rounded-full border-2 px-4 py-2 text-sm font-semibold transition-colors ${
-        selected ? 'border-brand-600 bg-brand-600 text-white' : 'border-brand-200 bg-white text-brand-700 hover:border-brand-400 hover:bg-brand-50'
+    `min-h-[44px] rounded-full border-2 px-4 py-2 text-sm font-medium transition-colors ${
+        selected ? 'border-[#44605e] bg-[#44605e] text-white' : 'border-slate-300 bg-white text-slate-700 hover:border-[#44605e] hover:bg-slate-50'
     }`;
 const fieldClass =
     'w-full min-h-[44px] rounded-xl border-2 border-slate-200 bg-white px-3.5 py-2 text-base text-slate-900 focus:border-brand-500 focus:outline-none';
 const sendClass =
-    'inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-brand-600 px-5 text-sm font-bold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40';
+    'inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-[#ff9f16] px-5 text-sm font-bold text-[#1f3a40] transition hover:bg-[#ffb04a] disabled:cursor-not-allowed disabled:opacity-40';
 const skipClass = 'min-h-[44px] rounded-full px-4 text-sm font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-800';
 
 // The answer area for one question (it sits inside the chat's input box)

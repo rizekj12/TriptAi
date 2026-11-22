@@ -48,7 +48,7 @@ export default function InviteModal({ open, onClose, tripId, destination }) {
           <UserPlus size={22} />
         </span>
         <div>
-          <h2 className="text-lg font-bold text-gray-900">Invite travel partner</h2>
+          <h2 className="text-lg font-bold text-ink-800">Invite travel partner</h2>
           <p className="text-sm text-gray-600">
             {settings?.requireApproval === false
               ? "Anyone with this link can join and view the trip."

@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import ScrapbookBackground from "./ScrapbookBackground";
 
-// Shared shell for the sign-in, sign-up and password screens: scrapbook background,
-// app name, and a frosted card for the form.
+// Shared shell for the sign-in, sign-up and password screens: night-sky background with clouds,
+// sun and a plane, the logo, and a light card for the form.
 export default function AuthLayout({ children }) {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-10 text-white">
@@ -14,17 +14,18 @@ export default function AuthLayout({ children }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-6 flex items-center gap-3"
+        className="mb-6 flex items-center gap-2"
       >
-        {/* Plane icon in a white circle, then the wordmark with the tagline left-aligned under it */}
-        <span className="glass-strong flex h-[73px] w-[73px] flex-none items-center justify-center rounded-full shadow-sm">
-          <img src="/illustrations/plane-mark.png" alt="" className="h-[46px] w-[46px] object-contain" />
+        {/* Logo: the plane (tilted up-left, white star) in a white circle, then the dark teal "Tript" / slate "Ai"
+            wordmark with the tagline tucked underneath it */}
+        <span className="flex h-[58px] w-[58px] flex-none items-center justify-center rounded-full bg-white shadow-sm">
+          <img src="/illustrations/plane-mark-night.png" alt="" className="h-[38px] w-[38px] -rotate-45 object-contain" />
         </span>
         <div className="flex flex-col items-start">
-          <h1 className="drop-shadow">
-            <img src="/illustrations/triptai-wordmark-white.svg" alt="TriptAi" className="h-[46px] w-auto" />
+          <h1>
+            <img src="/illustrations/triptai-wordmark-day2.svg" alt="TriptAi" className="h-[58px] w-auto" />
           </h1>
-          <p className="mt-1 text-sm text-white/80 drop-shadow">Plan less. Travel more.</p>
+          <p className="mt-1 pl-[13px] font-[Arial,Helvetica,sans-serif] text-[19px] leading-none text-[#2b4142]">Plan less. Go more.</p>
         </div>
       </motion.div>
 
@@ -32,7 +33,7 @@ export default function AuthLayout({ children }) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="w-full max-w-sm rounded-3xl bg-white/15 p-6 shadow-2xl ring-1 ring-white/25 backdrop-blur-md sm:p-8"
+        className="w-full max-w-sm rounded-3xl bg-[#36575c]/95 p-6 shadow-2xl ring-1 ring-white/15 backdrop-blur-md sm:p-8"
       >
         {children}
       </motion.div>
@@ -92,7 +93,7 @@ export function AuthButton({ busy, busyLabel, children }) {
     <button
       type="submit"
       disabled={busy}
-      className="w-full rounded-xl border-2 border-white bg-page py-3 font-[Arial,Helvetica,sans-serif] text-[18px] font-normal leading-tight text-white shadow-lg transition hover:bg-brand-950 hover:shadow-xl disabled:opacity-60"
+      className="w-full rounded-xl bg-[#ff9f16] py-3 text-[18px] font-bold leading-tight text-[#1f3a40] shadow-[0_0_12px_rgba(255,159,22,0.3)] transition hover:bg-[#ffb04a] hover:shadow-[0_0_16px_rgba(255,159,22,0.4)] disabled:opacity-60"
     >
       {busy ? busyLabel : children}
     </button>

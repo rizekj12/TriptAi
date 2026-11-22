@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Download, Loader2 } from "lucide-react";
 import Logo from "../Logo";
 import CrewBubbles from "../crew/CrewBubbles";
-import { getCountryFlagOnly } from "../../utils/countryFlags";
 import { formatRange } from "../../utils/calendar";
+import { getCountryFlagOnly } from "../../utils/countryFlags";
 import { placeName, useHomeCountry } from "../../utils/tripName";
 
 // Navy trip header: back link, travelers and actions, the trip's name and dates, and the
@@ -31,7 +31,7 @@ export default function TripHeader({ tripId, formData, days, viewer, crew, secti
               className="-ml-2 inline-flex min-h-[44px] items-center gap-1.5 rounded-xl px-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
             >
               <ArrowLeft size={18} />
-              My trips
+              Dashboard
             </Link>
           )}
 
@@ -60,11 +60,11 @@ export default function TripHeader({ tripId, formData, days, viewer, crew, secti
         <div className="mt-3 sm:mt-4">
           {cities.length > 0 && (
             <p className="truncate text-xs font-bold uppercase tracking-[0.14em] text-brand-600">
-              {country} · {cities.join(" & ")}
+              {getCountryFlagOnly(country)} {country} · {cities.join(" & ")}
             </p>
           )}
-          <h1 className="mt-1 text-[26px] font-extrabold leading-tight tracking-tight sm:text-4xl">
-            {getCountryFlagOnly(country)} {days.length} days in {name}
+          <h1 className="mt-1 text-[26px] font-extrabold leading-tight tracking-tight text-brand-800 sm:text-4xl">
+            {days.length} days in {name}
           </h1>
           {range && (
             <p className="mt-1 text-sm text-slate-500 sm:text-[15px]">

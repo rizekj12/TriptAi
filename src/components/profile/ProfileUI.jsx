@@ -30,7 +30,7 @@ export function SectionHeading({ title, description, action }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h2 className="text-[22px] font-extrabold text-slate-900">{title}</h2>
+        <h2 className="text-[22px] font-extrabold text-ink-800">{title}</h2>
         {description && <p className="mt-1 text-sm text-slate-600">{description}</p>}
       </div>
       {action}

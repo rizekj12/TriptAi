@@ -155,7 +155,7 @@ export default function FoodSpotsPanel({ tripId, cities, foodSpots, homebases, r
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-                    <h3 className="font-semibold text-gray-900">{spot.name}</h3>
+                    <h3 className="font-semibold text-ink-800">{spot.name}</h3>
                     <a
                       href={gmaps(spot.address ? `${spot.name}, ${spot.address}` : `${spot.name} ${spot.neighborhood || ""} ${city}`)}
                       target="_blank"

@@ -56,13 +56,13 @@ export default function ProfilePage() {
   const progress = completeness(user, profile.data, documents.data);
 
   return (
-    <div className="min-h-screen bg-page pb-24 text-white sm:pb-16">
+    <div className="min-h-screen bg-page pb-24 text-ink-800 sm:pb-16">
       <AppHeader />
 
       <main className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
         <Link to="/" className="inline-flex items-center gap-1.5 text-sm font-semibold text-orchid-800 hover:text-orchid-950">
           <ArrowLeft size={16} />
-          Back to my trips
+          Back to dashboard
         </Link>
 
         {/* Identity band */}

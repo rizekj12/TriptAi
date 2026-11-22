@@ -47,10 +47,20 @@ function isComplete(f) {
 // The review card needs to know whether the detailed questions apply
 const REVIEW_STEPS = { quick: [], detailed: [{ id: 'interests' }] };
 
+// Paints a shape from one of our transparent PNGs in a flat color (the element's background)
+const maskOf = (src) => ({
+    WebkitMaskImage: `url(${src})`,
+    maskImage: `url(${src})`,
+    WebkitMaskSize: 'contain',
+    maskSize: 'contain',
+    WebkitMaskRepeat: 'no-repeat',
+    maskRepeat: 'no-repeat',
+});
+
 function BotBubble({ children }) {
     return (
         <div className="flex items-end gap-2">
-            <span className="flex h-8 w-8 flex-none items-center justify-center glass-strong rounded-full shadow-sm">
+            <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-ink-50 shadow-sm ring-1 ring-ink-200">
                 <LogoMark className="h-5 w-5" />
             </span>
             <div className="max-w-[85%] rounded-2xl rounded-bl-md bg-slate-100 px-4 py-2.5 text-[15px] leading-relaxed text-slate-800 shadow-sm">
@@ -68,12 +78,12 @@ function UserBubble({ children, onEdit }) {
                     type="button"
                     onClick={onEdit}
                     aria-label={`Change answer: ${children}`}
-                    className="flex h-9 w-9 flex-none items-center justify-center rounded-full text-white/50 transition hover:bg-white/10 hover:text-white"
+                    className="flex h-9 w-9 flex-none items-center justify-center rounded-full text-ink-600/60 transition hover:bg-white/40 hover:text-ink-700"
                 >
                     <Pencil size={14} />
                 </button>
             )}
-            <div className="max-w-[80%] rounded-2xl rounded-br-md bg-aqua-300 px-4 py-2.5 text-[15px] font-medium leading-relaxed text-slate-900 shadow-sm">
+            <div className="max-w-[80%] rounded-2xl rounded-br-md bg-[#44605e] px-4 py-2.5 text-[15px] font-medium leading-relaxed text-white shadow-sm">
                 {children}
             </div>
         </div>
@@ -85,7 +95,7 @@ function Typing() {
         <BotBubble>
             <span className="flex gap-1 py-1.5" aria-label="TriptAi is typing">
                 {[0, 150, 300].map((d) => (
-                    <span key={d} className="h-2 w-2 animate-bounce rounded-full bg-brand-300" style={{ animationDelay: `${d}ms` }} />
+                    <span key={d} className="h-2 w-2 animate-bounce rounded-full bg-ink-300" style={{ animationDelay: `${d}ms` }} />
                 ))}
             </span>
         </BotBubble>
@@ -191,7 +201,7 @@ export default function TripQuestionnaire({ onComplete, isGenerating, initialFor
         <button
             onClick={handleSubmit}
             disabled={isGenerating}
-            className="flex w-full min-h-[52px] items-center justify-center gap-2 rounded-full bg-brand-600 px-6 text-base font-bold text-white shadow-md transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex w-full min-h-[52px] items-center justify-center gap-2 rounded-full bg-[#ff9f16] px-6 text-base font-bold text-[#1f3a40] shadow-[0_0_12px_rgba(255,159,22,0.3)] transition hover:bg-[#ffb04a] disabled:cursor-not-allowed disabled:opacity-60"
         >
             {isGenerating ? <Loader2 size={20} className="animate-spin" /> : <Sparkles size={20} />}
             {isGenerating ? 'Starting…' : 'Generate Itinerary'}
@@ -201,77 +211,64 @@ export default function TripQuestionnaire({ onComplete, isGenerating, initialFor
     // Gemini-style: logo and title on top, then a bordered frame holding the
     // conversation and, pinned at its bottom, one big rounded box with the answer controls.
     return (
-        <div className="relative isolate flex h-[100dvh] overflow-hidden bg-page text-white">
-            {/* Sage emerald wave from the top corner, stretched wider than the screen (anchored right)
-                so its edge runs gently across the middle */}
-            <svg aria-hidden="true" viewBox="0 0 1000 300" preserveAspectRatio="none" className="pointer-events-none absolute right-0 top-0 -z-10 h-[280px] w-[170%] sm:h-[400px]">
-                <path d="M0 0 H965 C890 40 810 62 680 66 C540 70 470 52 380 108 C290 165 200 200 0 200 Z" fill="#3b615e" />
+        <div className="relative isolate flex h-[100dvh] overflow-hidden bg-[#cdeae8] bg-[linear-gradient(to_bottom,#f6fbfb_0%,#f6fbfb_14%,#cdeae8_32%)] text-[#2b4142]">
+            {/* Slate wave across the top: deepest at the left edge, thinning to nothing at the right */}
+            <svg aria-hidden="true" viewBox="0 0 1000 120" preserveAspectRatio="none" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[88px] w-full sm:h-[122px]">
+                <path d="M0 0 H1000 C860 38 640 52 420 62 C230 71 100 88 0 120 Z" fill="#4a605e" />
             </svg>
-            {/* Huge clouds on each side, half off the screen; the left one sits 100px higher than the right */}
-            <img
-                src="/illustrations/cloud.png"
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute left-0 top-[calc(25%+50px)] -z-10 w-[11rem] -translate-x-1/2 opacity-[0.54] sm:w-[17rem] xl:w-[22rem]"
-            />
-            <img
-                src="/illustrations/cloud.png"
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute right-0 top-[calc(25%+150px)] -z-10 w-[11rem] translate-x-1/2 opacity-[0.54] sm:w-[17rem] xl:w-[22rem]"
-            />
-            {/* Peach pine trees, one big and one small, in the bottom-left corner (wide screens, beside the chat) */}
-            <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-4 -z-10 hidden items-end gap-2 opacity-[0.54] lg:flex xl:left-8 xl:gap-3">
-                <img src="/illustrations/pine-tree.png" alt="" className="h-40 w-auto xl:h-64" />
-                <img src="/illustrations/pine-tree.png" alt="" className="h-28 w-auto xl:h-44" />
-            </div>
+            {/* Big near-white clouds half off each side (the left one lower), and a faint slate plane with
+                sparkles flying up out of the bottom-left corner toward the upper right. Drawn with our artwork as a mask so
+                they take this page's colors. */}
+            <div aria-hidden="true" className="pointer-events-none absolute left-0 top-[30%] -z-10 aspect-[1200/756] w-[11rem] -translate-x-[38%] bg-[#e8f6f5] sm:w-[19rem] xl:w-[24rem]" style={maskOf('/illustrations/cloud.png')} />
+            <div aria-hidden="true" className="pointer-events-none absolute right-0 top-[16%] -z-10 aspect-[1200/756] w-[11rem] translate-x-[30%] -scale-x-100 bg-[#e8f6f5] sm:w-[19rem] xl:w-[24rem]" style={maskOf('/illustrations/cloud.png')} />
+            <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 -z-10 hidden aspect-[1231/1400] w-[17rem] -translate-x-[14%] translate-y-[14%] rotate-[18deg] bg-[#4a605e] opacity-[0.54] lg:block xl:w-[22rem]" style={maskOf('/illustrations/plane-sparkles-solid.png')} />
         <div className="flex min-w-0 flex-1 flex-col">
-            <div className="flex flex-none items-center justify-between gap-3 px-3 pt-3 sm:gap-4 sm:px-6 sm:pt-4">
-                <img src="/illustrations/triptai-logo-thin.svg" alt="TriptAi" className="h-8 w-auto sm:h-10" />
+            <div className="flex flex-none items-center justify-between gap-3 px-4 pt-3 sm:gap-4 sm:px-10 sm:pt-6">
+                <img src="/illustrations/triptai-logo-day2.svg" alt="TriptAi" className="h-9 w-auto sm:h-12" />
                 <button
                     onClick={() => onHome(formData)}
                     disabled={isGenerating}
-                    className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white ring-1 ring-white/20 transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#2b4142] bg-[#2b4142] px-5 text-sm font-medium text-white shadow-sm transition hover:bg-[#44605e] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                     <Home size={16} />
                     Save & exit
                 </button>
             </div>
 
-            <div className="flex-none px-4 pb-4 sm:pb-6">
-                <h1 className="whitespace-nowrap pt-6 text-center font-[Arial,Helvetica,sans-serif] text-[28px] font-normal leading-none sm:pt-10 sm:text-[52px]">
-                    <span className="text-[#2d625e]">Plan <i className="italic">less</i>.</span> <span className="text-[#ffb776]">Go <b className="font-bold">more.</b></span>
+            <div className="flex-none px-4 pb-5 sm:pb-8">
+                <h1 className="whitespace-nowrap pt-8 text-center font-[Arial,Helvetica,sans-serif] text-[30px] font-normal leading-none tracking-tight sm:pt-14 sm:text-[60px]">
+                    <span className="text-[#2b4142]">Plan <i className="italic">less</i>.</span> <span className="text-[#ff9f16]">Go <b className="font-bold">more.</b></span>
                 </h1>
             </div>
 
             {/* Sectioned progress bar floating just above the chat, with the current step below it */}
             <div className="mx-3 mb-3 flex-none sm:mx-auto sm:w-[calc(100%-3rem)] sm:max-w-3xl">
-            <div
-                role="progressbar"
-                aria-label="Trip planning progress"
-                aria-valuemin={0}
-                aria-valuemax={progress.length}
-                aria-valuenow={progress.filter((p) => p.done === p.total).length}
-                aria-valuetext={`On ${GROUP_TITLES[current.group]}`}
-                className="flex gap-1.5 sm:gap-2"
-            >
-                {progress.map((p) => (
-                    <div
-                        key={p.group}
-                        title={GROUP_TITLES[p.group]}
-                        className={`h-2.5 flex-1 overflow-hidden rounded-full transition-colors ${p.group === current.group ? 'bg-white/30' : 'bg-white/15'}`}
-                    >
-                        <div className="h-full rounded-full bg-[#ffb776] transition-[width] duration-500 ease-out" style={{ width: `${(p.done / p.total) * 100}%` }} />
-                    </div>
-                ))}
-            </div>
-            <p className="pt-2 text-center text-xs text-white/60">{`Planning your trip · ${GROUP_TITLES[current.group]}`}</p>
+                <div
+                    role="progressbar"
+                    aria-label="Trip planning progress"
+                    aria-valuemin={0}
+                    aria-valuemax={progress.length}
+                    aria-valuenow={progress.filter((p) => p.done === p.total).length}
+                    aria-valuetext={`On ${GROUP_TITLES[current.group]}`}
+                    className="flex gap-1.5 sm:gap-2"
+                >
+                    {progress.map((p) => (
+                        <div
+                            key={p.group}
+                            title={GROUP_TITLES[p.group]}
+                            className={`h-2.5 flex-1 overflow-hidden rounded-full transition-colors ${p.group === current.group ? 'bg-white' : 'bg-white/55'}`}
+                        >
+                            <div className="h-full rounded-full bg-[#ff9f16] transition-[width] duration-500 ease-out" style={{ width: `${(p.done / p.total) * 100}%` }} />
+                        </div>
+                    ))}
+                </div>
+                <p className="pt-2 text-center text-xs font-medium text-[#44605e]">{`Planning your trip · ${GROUP_TITLES[current.group]}`}</p>
             </div>
 
             {/* The chat's bounds: conversation on top, input box at the bottom */}
             <section
                 aria-label="Trip planning chat"
-                className="mx-3 mb-[max(0.75rem,env(safe-area-inset-bottom))] flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border-2 border-white/15 sm:mx-auto sm:mb-5 sm:w-[calc(100%-3rem)] sm:max-w-3xl"
+                className="mx-3 mb-[max(0.75rem,env(safe-area-inset-bottom))] flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border-2 border-[#44605e] sm:mx-auto sm:mb-5 sm:w-[calc(100%-3rem)] sm:max-w-3xl"
             >
             <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain" aria-live="polite">
                 <div className="space-y-3 px-4 pb-6 pt-5 sm:px-6">
