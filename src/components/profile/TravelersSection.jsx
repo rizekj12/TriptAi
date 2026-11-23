@@ -69,7 +69,7 @@ export default function TravelersSection() {
       {!travelers.isLoading && !travelers.isError && all.length === 0 && (
         <button
           onClick={() => setEditing({})}
-          className="mt-5 block w-full rounded-2xl border-2 border-dashed border-slate-300 p-6 text-center text-sm text-slate-600 transition hover:border-violet-400 hover:bg-violet-50/40"
+          className="mt-5 block w-full rounded-2xl border-2 border-dashed border-slate-300 p-6 text-center text-sm text-slate-600 transition hover:border-orchid-400 hover:bg-orchid-50/40"
         >
           <strong className="block text-base text-slate-900">No saved travelers yet</strong>
           Add the people you travel with most. You can also save anyone on one of your trips from its Travel Crew tab.
@@ -122,7 +122,7 @@ export default function TravelersSection() {
   );
 }
 
-// "On Trip Planner · 3 trips together", "Joined as a guest · 1 trip together" or "No trips
+// "On TriptAi · 3 trips together", "Joined as a guest · 1 trip together" or "No trips
 // together yet". Only trips you share count, so it never says whether someone you haven't
 // traveled with has an account.
 export function TravelerStatus({ status }) {
@@ -130,7 +130,7 @@ export function TravelerStatus({ status }) {
   const trips = status.tripsTogether;
   const together = `${trips} trip${trips === 1 ? "" : "s"} together`;
   const [dot, text] = status.onTripPlanner
-    ? ["bg-emerald-500", `On Trip Planner · ${together}`]
+    ? ["bg-brand-500", `On TriptAi · ${together}`]
     : trips
       ? ["bg-slate-400", `Joined as a guest · ${together}`]
       : ["bg-slate-300", "No trips together yet"];
@@ -167,7 +167,7 @@ function TravelerForm({ traveler, onClose }) {
   const error = invalid || save.error?.message || remove.error?.message;
   return (
     <form onSubmit={submit}>
-      <h2 className="text-lg font-extrabold text-slate-900">{traveler.id ? "Edit traveler" : "Add a traveler"}</h2>
+      <h2 className="text-lg font-extrabold text-ink-800">{traveler.id ? "Edit traveler" : "Add a traveler"}</h2>
       <p className="mt-1 text-sm text-slate-600">With an email, you can send them a trip invite in one tap.</p>
       <div className="mt-5 space-y-4">
         <Field label="Name" htmlFor="traveler-name">
@@ -250,7 +250,7 @@ function InviteToTrip({ traveler, onClose }) {
 
   return (
     <div>
-      <h2 className="text-lg font-extrabold text-slate-900">Invite {firstName} to a trip</h2>
+      <h2 className="text-lg font-extrabold text-ink-800">Invite {firstName} to a trip</h2>
 
       {!trip ? (
         <>
@@ -267,7 +267,7 @@ function InviteToTrip({ traveler, onClose }) {
                 <li key={t.id}>
                   <button
                     onClick={() => choose(t)}
-                    className="flex w-full items-center gap-3 rounded-xl border-2 border-slate-200 p-3 text-left transition hover:border-violet-400 hover:bg-violet-50/40"
+                    className="flex w-full items-center gap-3 rounded-xl border-2 border-slate-200 p-3 text-left transition hover:border-orchid-400 hover:bg-orchid-50/40"
                   >
                     <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-slate-100 text-xl">
                       <CountryFlag name={t.destination} />

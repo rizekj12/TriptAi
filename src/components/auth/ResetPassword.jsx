@@ -31,7 +31,7 @@ export default function ResetPassword({ onDone }) {
     <AuthLayout>
       {success ? (
         <div className="text-center">
-          <CheckCircle2 size={40} className="mx-auto mb-3 text-green-300" />
+          <CheckCircle2 size={40} className="mx-auto mb-3 text-brand-300" />
           <h2 className="text-xl font-bold">Password updated</h2>
           <p className="mt-1 text-sm text-white/80">Signing you in…</p>
         </div>

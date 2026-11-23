@@ -1,33 +1,39 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Plane, Eye, EyeOff } from "lucide-react";
-import SkyBackground from "../SkyBackground";
+import { Eye, EyeOff } from "lucide-react";
+import ScrapbookBackground from "./ScrapbookBackground";
 
-// Shared shell for the sign-in, sign-up and password screens: sky background,
-// app name, and a frosted card for the form.
+// Shared shell for the sign-in, sign-up and password screens: night-sky background with clouds,
+// sun and a plane, the logo, and a light card for the form.
 export default function AuthLayout({ children }) {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-10 text-white">
-      <SkyBackground />
+      <ScrapbookBackground />
 
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-6 flex flex-col items-center text-center"
+        className="mb-6 flex items-center gap-2"
       >
-        <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 shadow-xl">
-          <Plane size={28} className="rotate-45 fill-white" />
+        {/* Logo: the plane (tilted up-left, white star) in a white circle, then the dark teal "Tript" / slate "Ai"
+            wordmark with the tagline tucked underneath it */}
+        <span className="flex h-[58px] w-[58px] flex-none items-center justify-center rounded-full bg-white shadow-sm">
+          <img src="/illustrations/plane-mark-night.png" alt="" className="h-[38px] w-[38px] -rotate-45 object-contain" />
+        </span>
+        <div className="flex flex-col items-start">
+          <h1>
+            <img src="/illustrations/triptai-wordmark-day2.svg" alt="TriptAi" className="h-[58px] w-auto" />
+          </h1>
+          <p className="mt-1 pl-[13px] font-[Arial,Helvetica,sans-serif] text-[19px] leading-none text-[#2b4142]">Plan less. Go more.</p>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight drop-shadow">Trip Planner</h1>
-        <p className="mt-1 text-sm text-white/80 drop-shadow">AI-planned trips, ready when you land</p>
       </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="w-full max-w-sm rounded-3xl bg-white/15 p-6 shadow-2xl ring-1 ring-white/25 backdrop-blur-md sm:p-8"
+        className="w-full max-w-sm rounded-3xl bg-[#36575c]/95 p-6 shadow-2xl ring-1 ring-white/15 backdrop-blur-md sm:p-8"
       >
         {children}
       </motion.div>
@@ -36,7 +42,7 @@ export default function AuthLayout({ children }) {
 }
 
 const inputClass =
-  "w-full rounded-xl bg-white/90 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400";
+  "w-full rounded-xl bg-white/90 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-400";
 
 // Labelled input with a leading icon. type="password" gets a show/hide toggle.
 export function AuthInput({ label, icon: Icon, type = "text", ...props }) {
@@ -74,7 +80,7 @@ export function AuthMessage({ type = "error", children }) {
   return (
     <div
       className={`rounded-xl px-4 py-2.5 text-sm ${
-        type === "success" ? "bg-green-500/30 text-green-50" : "bg-red-500/30 text-red-50"
+        type === "success" ? "bg-brand-500/30 text-brand-50" : "bg-red-500/30 text-red-50"
       }`}
     >
       {children}
@@ -87,7 +93,7 @@ export function AuthButton({ busy, busyLabel, children }) {
     <button
       type="submit"
       disabled={busy}
-      className="w-full rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 py-3 text-sm font-semibold shadow-lg transition hover:shadow-xl disabled:opacity-60"
+      className="w-full rounded-xl bg-[#ff9f16] py-3 text-[18px] font-bold leading-tight text-[#1f3a40] shadow-[0_0_12px_rgba(255,159,22,0.3)] transition hover:bg-[#ffb04a] hover:shadow-[0_0_16px_rgba(255,159,22,0.4)] disabled:opacity-60"
     >
       {busy ? busyLabel : children}
     </button>

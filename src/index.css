@@ -3,5 +3,49 @@
 @tailwind utilities;
 
 html, body, #root { height: 100%; }
+body { background-color: #cdeae8; }
+
+@layer base {
+  /* Headers and titles use the logo font, Hobo Std (font-logo; falls back to Nunito where it
+     isn't available). Hobo has one weight, so don't let font-bold/extrabold fake a heavier one. */
+  h1, h2, h3 { @apply font-logo; font-synthesis: none; letter-spacing: normal; }
+  /* Titles are the palette's dark teal-green, not black. Headings on dark surfaces (anything that
+     sets white text, like the sign-in card or the slate stat panels) keep the white. */
+  h1, h2, h3 { color: theme("colors.ink.800"); }
+  .text-white :is(h1, h2, h3) { color: inherit; }
+}
+
+@layer components {
+  /* Frosted-glass surfaces on the dark emerald page: cards use .glass, things that sit on top
+     of other content (headers, menus, pop-ups) use the more opaque .glass-strong. Pages use
+     light text; these surfaces switch back to dark text. */
+  .glass { @apply bg-white/[0.78] text-slate-900 backdrop-blur-xl backdrop-saturate-150 ring-1 ring-inset ring-white/60; }
+  .glass-strong { @apply bg-white/[0.88] text-slate-900 backdrop-blur-xl backdrop-saturate-150 ring-1 ring-inset ring-white/70; }
+}
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+
+/* Sign-in background micro movement (ScrapbookBackground). These use the separate `translate` and
+   `rotate` properties so they add to each element's own positioning transform instead of
+   replacing it. Clouds drift a few pixels back and forth; palm trees sway from the base while
+   their crowns rustle around the top of the trunk. */
+@keyframes cloud-drift {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 14px 3px; }
+}
+@keyframes palm-sway {
+  0%, 100% { rotate: -0.8deg; }
+  50% { rotate: 0.8deg; }
+}
+@keyframes palm-rustle {
+  0%, 100% { rotate: -2.5deg; }
+  50% { rotate: 2deg; }
+}
+.cloud-drift { animation: cloud-drift 16s ease-in-out infinite; }
+.cloud-drift-alt { animation-duration: 21s; animation-delay: -8s; animation-direction: reverse; }
+.palm-sway { transform-origin: 50% 100%; animation: palm-sway 6s ease-in-out infinite; }
+.palm-rustle { transform-box: view-box; transform-origin: 98px 62px; animation: palm-rustle 3.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .cloud-drift, .palm-sway, .palm-rustle { animation: none; }
+}

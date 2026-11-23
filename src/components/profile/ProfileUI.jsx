@@ -4,13 +4,13 @@ import { Loader2 } from "lucide-react";
 // Building blocks shared by the profile page's sections (Design A: white cards on a light page)
 
 export const fieldClass =
-  "w-full min-h-[44px] rounded-xl border-2 border-gray-200 bg-white px-3.5 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:border-violet-600 focus:outline-none disabled:bg-slate-50 disabled:text-slate-500";
+  "w-full min-h-[44px] rounded-xl border-2 border-gray-200 bg-white px-3.5 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:border-orchid-600 focus:outline-none disabled:bg-slate-50 disabled:text-slate-500";
 
 export const primaryButton =
-  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-violet-700 px-4 py-2.5 text-[15px] font-bold text-white transition hover:bg-violet-800 disabled:opacity-60";
+  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-orchid-700 px-4 py-2.5 text-[15px] font-bold text-white transition hover:bg-orchid-800 disabled:opacity-60";
 
 export const secondaryButton =
-  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border-2 border-gray-200 bg-white px-4 py-2.5 text-[15px] font-bold text-slate-800 transition hover:border-violet-300 disabled:opacity-60";
+  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border-2 border-gray-200 bg-white px-4 py-2.5 text-[15px] font-bold text-slate-800 transition hover:border-orchid-300 disabled:opacity-60";
 
 // Label above a control; `hint` is a line of help underneath
 export function Field({ label, htmlFor, hint, children, className = "" }) {
@@ -30,7 +30,7 @@ export function SectionHeading({ title, description, action }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h2 className="text-[22px] font-extrabold text-slate-900">{title}</h2>
+        <h2 className="text-[22px] font-extrabold text-ink-800">{title}</h2>
         {description && <p className="mt-1 text-sm text-slate-600">{description}</p>}
       </div>
       {action}
@@ -43,7 +43,7 @@ export function SaveBar({ dirty, saving, onCancel, message }) {
   return (
     <div className="mt-7 flex flex-wrap items-center justify-end gap-3 border-t border-slate-200 pt-5">
       {message && (
-        <p role="status" className={`mr-auto text-sm ${message.type === "error" ? "text-red-600" : "text-emerald-700"}`}>
+        <p role="status" className={`mr-auto text-sm ${message.type === "error" ? "text-red-600" : "text-brand-700"}`}>
           {message.text}
         </p>
       )}
@@ -62,8 +62,8 @@ export function SaveBar({ dirty, saving, onCancel, message }) {
 
 // Small rounded label, e.g. a document's expiry status
 const PILL_TONES = {
-  ok: "bg-emerald-100 text-emerald-800",
-  warn: "bg-amber-100 text-amber-800",
+  ok: "bg-brand-100 text-brand-800",
+  warn: "bg-mango-100 text-mango-800",
   bad: "bg-red-100 text-red-800",
   none: "bg-slate-100 text-slate-700",
 };

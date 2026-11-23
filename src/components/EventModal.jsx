@@ -37,15 +37,15 @@ export default function EventModal({ event, onClose }) {
                     <div className="p-6 space-y-6">
                         {/* Title */}
                         <div>
-                            <h2 className="text-3xl font-bold text-gray-900">{event.title}</h2>
+                            <h2 className="text-3xl font-bold text-ink-800">{event.title}</h2>
                         </div>
 
                         {/* Details Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Date */}
                             <div className="flex items-start gap-3">
-                                <div className="p-2 bg-indigo-50 rounded-lg">
-                                    <Calendar size={20} className="text-indigo-600" />
+                                <div className="p-2 bg-brand-50 rounded-lg">
+                                    <Calendar size={20} className="text-brand-600" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-medium text-gray-500 uppercase">Date</p>
@@ -55,8 +55,8 @@ export default function EventModal({ event, onClose }) {
 
                             {/* Time */}
                             <div className="flex items-start gap-3">
-                                <div className="p-2 bg-purple-50 rounded-lg">
-                                    <Clock size={20} className="text-purple-600" />
+                                <div className="p-2 bg-orchid-50 rounded-lg">
+                                    <Clock size={20} className="text-orchid-600" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-medium text-gray-500 uppercase">Time</p>
@@ -66,8 +66,8 @@ export default function EventModal({ event, onClose }) {
 
                             {/* Location */}
                             <div className="flex items-start gap-3 md:col-span-2">
-                                <div className="p-2 bg-green-50 rounded-lg">
-                                    <MapPin size={20} className="text-green-600" />
+                                <div className="p-2 bg-brand-50 rounded-lg">
+                                    <MapPin size={20} className="text-brand-600" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-medium text-gray-500 uppercase">Location</p>
@@ -79,8 +79,8 @@ export default function EventModal({ event, onClose }) {
                             {/* Price */}
                             {verified && event.price && (
                                 <div className="flex items-start gap-3 md:col-span-2">
-                                    <div className="p-2 bg-amber-50 rounded-lg">
-                                        <Ticket size={20} className="text-amber-600" />
+                                    <div className="p-2 bg-mango-50 rounded-lg">
+                                        <Ticket size={20} className="text-mango-600" />
                                     </div>
                                     <div>
                                         <p className="text-xs font-medium text-gray-500 uppercase">Price</p>
@@ -92,12 +92,12 @@ export default function EventModal({ event, onClose }) {
 
                         {/* Description */}
                         <div>
-                            <h3 className="text-sm font-semibold text-gray-900 mb-2">About This Event</h3>
+                            <h3 className="text-sm font-semibold text-ink-800 mb-2">About This Event</h3>
                             <p className="text-gray-700 leading-relaxed">{event.description}</p>
                         </div>
 
                         {!verified && (
-                            <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                            <p className="rounded-xl bg-mango-50 px-4 py-3 text-sm text-mango-900">
                                 Suggested by AI when this trip was made. The date, time and details may be wrong, so search for it before you go.
                             </p>
                         )}
@@ -111,7 +111,7 @@ export default function EventModal({ event, onClose }) {
                                     href={event.ticketLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all font-semibold"
+                                    className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-brand-600 to-orchid-600 text-white rounded-xl hover:shadow-lg transition-all font-semibold"
                                 >
                                     <Ticket size={18} />
                                     Get Tickets
