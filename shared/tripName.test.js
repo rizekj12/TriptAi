@@ -29,3 +29,14 @@ test("tripName reads the cities column, or the questionnaire answers", () => {
   expect(tripName({ destination: US, cities: ["Chicago"] }, US)).toBe("Chicago");
   expect(tripName({ destination: US, itinerary_data: { _form_data: { cities: [{ name: "Miami" }] } } }, US)).toBe("Miami");
 });
+
+test("a home trip in the United States is named after its states", () => {
+  expect(placeName({ country: US, cities: ["Pensacola, FL"] }, US)).toBe("Florida");
+  expect(placeName({ country: US, cities: ["Miami, FL", "Orlando, FL"] }, US)).toBe("Florida");
+  expect(placeName({ country: US, cities: ["Miami, FL", "Atlanta, GA"] }, US)).toBe("Florida & Georgia");
+  expect(placeName({ country: US, cities: ["Austin, texas"] }, US)).toBe("Texas");
+  // A city without a state keeps the city names
+  expect(placeName({ country: US, cities: ["Miami, FL", "Somewhere"] }, US)).toBe("Miami, FL & Somewhere");
+  // Abroad, the country as before
+  expect(placeName({ country: US, cities: ["Pensacola, FL"] }, "Canada")).toBe(US);
+});

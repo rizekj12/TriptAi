@@ -1,27 +1,40 @@
 import React from "react";
+import { Lightbulb } from "lucide-react";
 import { Link } from "react-router-dom";
 import TripThumb from "./TripThumb";
 import { getCountryFlagOnly } from "../../utils/countryFlags";
 import { FEATURED_DESTINATIONS } from "../../data/destinationImages";
 import { WEEKDAYS, monthWeeks, monthLabel, todayIso } from "../../utils/calendar";
 import { tripName, useHomeCountry } from "../../utils/tripName";
+import { colorForKey } from "../../utils/tripColors";
 
-const card = "rounded-3xl bg-white p-5 shadow-[0_6px_20px_rgba(15,23,42,0.05)]";
+const card = "glass rounded-3xl p-5 shadow-[0_6px_20px_rgba(15,23,42,0.05)]";
 
-// One month with trip days highlighted; links to the full calendar on that month
+// Small round badge for a section heading: a solid white icon in a dark slate circle. Line-only
+// icons (like the history clock, which has no shape to fill) pass filled={false}.
+export function HeadingIcon({ icon: Icon, filled = true }) {
+  return (
+    <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-[#2d625e]" aria-hidden="true">
+      <Icon size={17} className="text-white" fill={filled ? "currentColor" : "none"} strokeWidth={filled ? 2 : 2.5} />
+    </span>
+  );
+}
+
+// One month with trip days highlighted in each trip's own color (the same one the full calendar
+// uses); links to the full calendar on that month
 export function MiniCalendar({ month, trips }) {
   const homeCountry = useHomeCountry();
   const today = todayIso();
   const prefix = `${month.year}-${String(month.month + 1).padStart(2, "0")}`;
   const dated = trips.filter((t) => t.range && t.status !== "draft");
-  const onTrip = (iso) => dated.some((t) => t.range.start <= iso && t.range.end >= iso);
+  const tripOn = (iso) => dated.find((t) => t.range.start <= iso && t.range.end >= iso);
   const inMonth = dated.filter((t) => t.range.start <= `${prefix}-31` && t.range.end >= `${prefix}-01`);
 
   return (
     <section className={card}>
       <div className="flex items-center justify-between">
         <h2 className="text-base font-extrabold">{monthLabel(month)}</h2>
-        <Link to={`/calendar?month=${prefix}`} className="text-sm font-bold text-violet-700 hover:underline">
+        <Link to={`/calendar?month=${prefix}`} className="text-sm font-bold text-orchid-700 hover:underline">
           Full calendar
         </Link>
       </div>
@@ -31,12 +44,12 @@ export function MiniCalendar({ month, trips }) {
       <div className="mt-1.5 grid grid-cols-7 gap-1">
         {monthWeeks(month).flat().map((iso) => {
           const here = iso.startsWith(prefix);
-          const trip = here && onTrip(iso);
+          const trip = here && tripOn(iso);
           return (
             <span
               key={iso}
               className={`flex h-8 items-center justify-center rounded-lg text-[13px] font-semibold ${
-                !here ? "text-transparent" : trip ? "bg-violet-600 text-white" : iso === today ? "ring-2 ring-violet-400 text-slate-800" : "text-slate-700"
+                !here ? "text-transparent" : trip ? `${colorForKey(trip.trip.id)} text-white` : iso === today ? "ring-2 ring-orchid-400 text-slate-800" : "text-slate-700"
               }`}
             >
               {Number(iso.slice(8))}
@@ -48,7 +61,7 @@ export function MiniCalendar({ month, trips }) {
         <ul className="mt-3 space-y-1">
           {inMonth.map((t) => (
             <li key={t.trip.id} className="flex items-center gap-2 text-[13px] text-slate-700">
-              <span className="h-3 w-3 rounded bg-violet-600" />
+              <span className={`h-3 w-3 rounded ${colorForKey(t.trip.id)}`} />
               {getCountryFlagOnly(t.trip.destination)} {tripName(t.trip, homeCountry)}
             </li>
           ))}
@@ -65,17 +78,17 @@ export function TravelStats({ stats }) {
     { value: stats.days, label: "days away" },
   ];
   return (
-    <section className="rounded-3xl bg-[#0f2b5b] p-5 text-white">
+    <section className="rounded-3xl bg-brand-600 p-5 text-white">
       <h2 className="text-base font-extrabold">Your travels</h2>
       <div className="mt-3 grid grid-cols-3 gap-2 text-center">
         {items.map((i) => (
           <div key={i.label}>
             <div className="text-2xl font-extrabold">{i.value}</div>
-            <div className="text-xs text-slate-300">{i.label}</div>
+            <div className="text-xs text-brand-100">{i.label}</div>
           </div>
         ))}
       </div>
-      {stats.trips === 0 && <p className="mt-3 text-xs text-slate-300">Fills in as your trips wrap up.</p>}
+      {stats.trips === 0 && <p className="mt-3 text-xs text-brand-100">Fills in as your trips wrap up.</p>}
     </section>
   );
 }
@@ -86,14 +99,17 @@ export function TripIdeas({ exclude = [] }) {
   if (!ideas.length) return null;
   return (
     <section className={card}>
-      <h2 className="text-base font-extrabold">Ideas for your next trip</h2>
+      <h2 className="flex items-center gap-2 text-base font-extrabold">
+        <HeadingIcon icon={Lightbulb} />
+        Ideas for your next trip
+      </h2>
       <ul className="mt-3 space-y-2.5">
         {ideas.map((d) => (
           <li key={d.name}>
             <Link to={`/new?destination=${encodeURIComponent(d.name)}`} className="group flex items-center gap-3">
               <TripThumb country={d.name} className="h-14 w-14 flex-none rounded-xl" />
               <span className="min-w-0">
-                <span className="block font-bold group-hover:text-violet-700">{getCountryFlagOnly(d.name)} {d.name}</span>
+                <span className="block font-bold group-hover:text-orchid-700">{getCountryFlagOnly(d.name)} {d.name}</span>
                 <span className="block truncate text-sm text-slate-600">{d.tag}</span>
               </span>
             </Link>

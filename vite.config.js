@@ -14,15 +14,15 @@ export default defineConfig({
         "icon-512.png",
         "apple-touch-icon.png",
         "icons/maskable-512.png",
-        "favicon.svg",
+        "favicon-triptai.svg",
       ],
       manifest: {
-        name: "Trip Planner",
-        short_name: "Trip Planner",
+        name: "TriptAi",
+        short_name: "TriptAi",
         description: "AI-planned trips with maps, food spots, reservations and offline PDFs.",
-        // Matches the top of the sky background
-        theme_color: "#0f2b5b",
-        background_color: "#0f2b5b",
+        // Matches the pale aqua site background
+        theme_color: "#cdeae8",
+        background_color: "#cdeae8",
         display: "standalone",
         start_url: "/",
         icons: [

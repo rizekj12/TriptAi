@@ -9,6 +9,7 @@ import CalendarPage from "./pages/CalendarPage";
 import JoinPage from "./pages/JoinPage";
 import GuestTripPage from "./pages/GuestTripPage";
 import NotificationsPage from "./pages/NotificationsPage";
+import GeneratingScreen from "./components/GeneratingScreen";
 
 export default function App() {
   return (
@@ -16,6 +17,10 @@ export default function App() {
       {/* Open without signing in: invite links and a guest's view-only trip */}
       <Route path="/join/:token" element={<JoinPage />} />
       <Route path="/guest/:token" element={<GuestTripPage />} />
+
+      {/* Local development only (npm run dev): preview the "making your plan" screen without
+          generating a trip. Not included in the live site. */}
+      {import.meta.env.DEV && <Route path="/preview/generating" element={<GeneratingScreen />} />}
 
       {/* Everything else needs an account */}
       <Route

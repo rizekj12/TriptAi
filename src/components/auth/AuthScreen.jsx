@@ -169,7 +169,7 @@ export default function AuthScreen() {
       ) : (
         <>
           {/* Sign in / Create account tabs */}
-          <div className="mb-6 grid grid-cols-2 rounded-xl bg-black/20 p-1 text-sm font-semibold">
+          <div className="mb-6 grid grid-cols-2 rounded-xl bg-[#213d43] p-1 text-sm font-semibold">
             {[
               ["signin", "Sign in"],
               ["signup", "Create account"],
@@ -189,7 +189,7 @@ export default function AuthScreen() {
             type="button"
             onClick={onGoogle}
             disabled={busy}
-            className="flex w-full items-center justify-center gap-3 rounded-xl bg-white py-3 text-sm font-semibold text-gray-800 shadow-lg transition hover:bg-gray-50 disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-3 rounded-xl border-2 border-white/70 py-3 text-[15px] font-medium text-white transition hover:bg-white/10 disabled:opacity-60"
           >
             <GoogleLogo />
             Continue with Google
@@ -215,7 +215,7 @@ export default function AuthScreen() {
 
             {mode === "signin" && (
               <div className="-mt-2 text-right">
-                <button type="button" onClick={() => switchMode("forgot")} className="text-xs text-white/80 underline">
+                <button type="button" onClick={() => switchMode("forgot")} className="text-xs text-[#ebbd88] underline hover:text-[#f1c999]">
                   Forgot password?
                 </button>
               </div>
