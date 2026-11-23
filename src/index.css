@@ -25,3 +25,27 @@ body { background-color: #cdeae8; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+
+/* Sign-in background micro movement (ScrapbookBackground). These use the separate `translate` and
+   `rotate` properties so they add to each element's own positioning transform instead of
+   replacing it. Clouds drift a few pixels back and forth; palm trees sway from the base while
+   their crowns rustle around the top of the trunk. */
+@keyframes cloud-drift {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 14px 3px; }
+}
+@keyframes palm-sway {
+  0%, 100% { rotate: -0.8deg; }
+  50% { rotate: 0.8deg; }
+}
+@keyframes palm-rustle {
+  0%, 100% { rotate: -2.5deg; }
+  50% { rotate: 2deg; }
+}
+.cloud-drift { animation: cloud-drift 16s ease-in-out infinite; }
+.cloud-drift-alt { animation-duration: 21s; animation-delay: -8s; animation-direction: reverse; }
+.palm-sway { transform-origin: 50% 100%; animation: palm-sway 6s ease-in-out infinite; }
+.palm-rustle { transform-box: view-box; transform-origin: 98px 62px; animation: palm-rustle 3.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .cloud-drift, .palm-sway, .palm-rustle { animation: none; }
+}

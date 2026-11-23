@@ -54,17 +54,25 @@ const PALM_FRONDS = [
   [[100, 30], [104, 0], 7],
 ].map(([c, tip, w]) => frond(CROWN, c, tip, w));
 
-// Palm tree silhouette: a gently leaning trunk under a crown of fronds
-function PalmTree({ className = "", flip = false }) {
+// Palm tree silhouette: a gently leaning trunk under a crown of fronds. The whole tree sways a
+// touch from its base and the crown rustles a little more (see .palm-sway / .palm-rustle in
+// index.css); `delay` keeps two trees from moving in step.
+function PalmTree({ className = "", flip = false, delay = 0 }) {
   return (
-    <svg viewBox="0 0 200 300" className={`absolute ${className}`} style={flip ? { transform: "scaleX(-1)" } : undefined}>
+    <svg
+      viewBox="0 0 200 300"
+      className={`palm-sway absolute ${className}`}
+      style={{ ...(flip ? { transform: "scaleX(-1)" } : {}), animationDelay: `${delay}s` }}
+    >
       <g fill={SLATE}>
         <path d="M88 300 C92 230 108 150 92 64 L104 62 C122 150 108 230 106 300 Z" />
-        {PALM_FRONDS.map((d, i) => (
-          <path key={i} d={d} />
-        ))}
-        <circle cx="96" cy="70" r="6" />
-        <circle cx="105" cy="72" r="5" />
+        <g className="palm-rustle" style={{ animationDelay: `${delay}s` }}>
+          {PALM_FRONDS.map((d, i) => (
+            <path key={i} d={d} />
+          ))}
+          <circle cx="96" cy="70" r="6" />
+          <circle cx="105" cy="72" r="5" />
+        </g>
       </g>
     </svg>
   );
@@ -74,8 +82,8 @@ export default function ScrapbookBackground() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" style={{ backgroundColor: SKY }}>
       {/* Clouds hanging off the top-left and top-right corners */}
-      <div className="absolute -left-[10%] -top-[4%] aspect-[1200/756] w-[52vw] sm:w-[40vw]" style={{ ...maskOf("/illustrations/cloud.png"), backgroundColor: CLOUD }} />
-      <div className="absolute -top-[12%] right-0 aspect-[1200/756] w-[60vw] translate-x-[56%] sm:w-[50vw]" style={{ ...maskOf("/illustrations/cloud.png"), backgroundColor: CLOUD }} />
+      <div className="cloud-drift absolute -left-[10%] -top-[4%] aspect-[1200/756] w-[52vw] sm:w-[40vw]" style={{ ...maskOf("/illustrations/cloud.png"), backgroundColor: CLOUD }} />
+      <div className="cloud-drift cloud-drift-alt absolute -top-[12%] right-0 aspect-[1200/756] w-[60vw] translate-x-[56%] sm:w-[50vw]" style={{ ...maskOf("/illustrations/cloud.png"), backgroundColor: CLOUD }} />
       {/* Glowing sun in front of the right cloud, on its upper-left shoulder (hidden on phone-size screens) */}
       <div className="absolute right-[10%] top-[6%] hidden aspect-square w-[11vw] rounded-full sm:block" style={{ backgroundColor: SUN, boxShadow: "0 0 18px 4px rgba(255,159,22,0.3)" }} />
       {/* Small plane flying just left of the right cloud, nose up and to the right */}
@@ -83,7 +91,7 @@ export default function ScrapbookBackground() {
 
       {/* Two palm trees in the bottom-left corner, trunks running down behind the hill */}
       <PalmTree className="bottom-0 left-[1%] h-[min(46vh,44vw)] w-auto" />
-      <PalmTree className="bottom-[3%] left-[min(17vw,26vh)] h-[min(28vh,27vw)] w-auto" flip />
+      <PalmTree className="bottom-[3%] left-[min(17vw,26vh)] h-[min(28vh,27vw)] w-auto" flip delay={-2.3} />
 
       {/* Slate hill along the bottom, rising toward the right */}
       <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-[15%] w-full">
