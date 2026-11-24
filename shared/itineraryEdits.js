@@ -141,3 +141,88 @@ export function restoreStop(itinerary, dayKey, spotKey, spot, index) {
     return { ...day, markers: [...markers.slice(0, at), spotKey, ...markers.slice(at)] };
   });
 }
+
+// ---- Edits as data (issue #38) ----
+// Editors change a trip through the server (they can't write the row themselves), so an edit
+// travels as a plain object, e.g. { op: "move", dayKey, spotKey, to }, and both the app (for
+// the instant, optimistic change) and the server apply it with applyEdit. Anything from the
+// browser is cleaned first: bad input throws an EditError rather than saving junk.
+
+export class EditError extends Error {}
+
+const MAX_TEXT = 300;
+const text = (value, max = MAX_TEXT) => (typeof value === "string" ? value.trim().slice(0, max) : "");
+const isKey = (value) => typeof value === "string" && value.length > 0 && value.length <= 100;
+const isHttps = (value) => typeof value === "string" && value.length <= 2000 && /^https:\/\//.test(value);
+
+const cleanCoords = (coords) => {
+  if (!Array.isArray(coords) || coords.length !== 2) return null;
+  const [lat, lng] = coords.map(Number);
+  return Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180 ? [lat, lng] : null;
+};
+
+// A place from a place search ({ title, address, coords }), or null if it has no name
+export function cleanPlace(place) {
+  const title = text(place?.title, 200);
+  if (!title) return null;
+  return { title, address: text(place.address), coords: cleanCoords(place.coords) };
+}
+
+// A stop's details coming back from the browser (undoing a remove): only the fields stops have
+const LOCATIONS = ["verified", "corrected", "unverified", "estimated", "far"];
+function cleanSpot(spot) {
+  const place = cleanPlace(spot);
+  if (!place) return null;
+  const links = Object.fromEntries(
+    ["maps", "youtube", "booking"].filter((k) => isHttps(spot.links?.[k])).map((k) => [k, spot.links[k]])
+  );
+  return {
+    ...place,
+    city: text(spot.city, 100) || null,
+    img: isHttps(spot.img) ? spot.img : null,
+    links,
+    ...(text(spot.estimatedCost, 60) && { estimatedCost: text(spot.estimatedCost, 60) }),
+    ...(LOCATIONS.includes(spot.location) && { location: spot.location }),
+    ...(spot.addedByTraveler === true && { addedByTraveler: true }),
+  };
+}
+
+// Applies one edit ({ op, ... }) to an itinerary and returns the new one. Throws EditError if
+// the edit is malformed or refers to a day that isn't on the trip.
+export function applyEdit(itinerary, edit) {
+  const { op, dayKey } = edit || {};
+  if (!isKey(dayKey) || !itinerary.days?.some((d) => d.key === dayKey)) throw new EditError("That day isn't part of this trip");
+  const needKey = () => {
+    if (!isKey(edit.spotKey)) throw new EditError("Missing stop");
+    return edit.spotKey;
+  };
+  switch (op) {
+    case "move":
+      if (!Number.isInteger(edit.to)) throw new EditError("Missing position");
+      return moveStop(itinerary, dayKey, needKey(), edit.to);
+    case "reorder":
+      if (!Array.isArray(edit.order) || edit.order.length > 200 || !edit.order.every(isKey)) throw new EditError("Bad order");
+      return reorderStops(itinerary, dayKey, edit.order);
+    case "moveToDay":
+      if (!isKey(edit.toDayKey)) throw new EditError("Missing day");
+      return moveStopToDay(itinerary, dayKey, needKey(), edit.toDayKey);
+    case "remove":
+      return removeStop(itinerary, dayKey, needKey());
+    case "restore": {
+      const key = needKey();
+      // The trip's own copy wins if the stop is still there
+      const spot = itinerary.spots?.[key] || cleanSpot(edit.spot);
+      if (!spot) throw new EditError("Missing stop details");
+      return restoreStop(itinerary, dayKey, key, spot, Number.isInteger(edit.index) ? edit.index : Infinity);
+    }
+    case "add": {
+      const place = cleanPlace(edit.place);
+      if (!place) throw new EditError("Missing place");
+      return addStop(itinerary, dayKey, place).itinerary;
+    }
+    case "toggleDone":
+      return toggleDone(itinerary, dayKey, needKey());
+    default:
+      throw new EditError("Unknown edit");
+  }
+}

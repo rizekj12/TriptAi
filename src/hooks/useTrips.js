@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../utils/supabase";
 import { fetchTrips, fetchTrip, deleteTrip, saveDraft, tripStatus, updateTripFormData, markPdfDownloaded, editItinerary } from "../utils/trips";
-import { startGeneration, loadMoreFoodSpots, downloadTripPdf, refreshTripEvents, regenerateTripDay } from "../utils/aiService";
+import { startGeneration, loadMoreFoodSpots, downloadTripPdf, refreshTripEvents, regenerateTripDay, editTripItinerary } from "../utils/aiService";
+import { applyEdit } from "../../shared/itineraryEdits.js";
 import { useAuth } from "../context/AuthContext";
 import { tripName, useHomeCountry } from "../utils/tripName";
 
@@ -180,18 +181,28 @@ export function useSaveDraft() {
 // Puts { days, spots } into the cached trip
 const withItinerary = (trip, { days, spots }) => trip && { ...trip, itinerary_data: { ...trip.itinerary_data, days, spots } };
 
-// mutate(edit), where edit(itinerary) => itinerary comes from shared/itineraryEdits.js. The
-// change shows at once and is saved on top of the latest version of the trip; if saving
-// fails, the trip goes back to how it was.
+// mutate(edit), where edit is { op, ... } (shared/itineraryEdits.js applyEdit). The change
+// shows at once and is saved on top of the latest version of the trip; if saving fails, the
+// trip goes back to how it was. The organizer saves straight to their trip; an editor
+// (issue #38, role from useCollab) through the server, which may change a trip it shares.
 export function useEditItinerary(tripId) {
   const qc = useQueryClient();
   const key = ["trip", tripId];
   return useMutation({
-    mutationFn: (edit) => editItinerary(tripId, edit),
+    mutationFn: (edit) =>
+      qc.getQueryData(["collab", tripId])?.role === "editor"
+        ? editTripItinerary(tripId, edit)
+        : editItinerary(tripId, (it) => applyEdit(it, edit)),
     onMutate: async (edit) => {
       await qc.cancelQueries({ queryKey: key });
       const before = qc.getQueryData(key);
-      if (before) qc.setQueryData(key, withItinerary(before, edit(before.itinerary_data)));
+      if (before) {
+        try {
+          qc.setQueryData(key, withItinerary(before, applyEdit(before.itinerary_data, edit)));
+        } catch {
+          // Not applicable here (e.g. the day just went away): saving will say why
+        }
+      }
       return { before };
     },
     onError: (_err, _edit, context) => context?.before && qc.setQueryData(key, context.before),
@@ -199,7 +210,7 @@ export function useEditItinerary(tripId) {
   });
 }
 
-// mutate({ dayKey, note }): asks Claude for a new plan for one day (organizer only)
+// mutate({ dayKey, note }): asks Claude for a new plan for one day (organizer and editors)
 export function useRegenerateDay(tripId) {
   const qc = useQueryClient();
   return useMutation({

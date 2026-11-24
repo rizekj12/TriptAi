@@ -38,6 +38,12 @@ export function notificationText({ type, data = {} }, homeCountry = null) {
       return `${data.name} joined ${trip}`;
     case "join_approved":
       return `${data.owner_name || "The organizer"} approved you to join the trip to ${place || "their trip"}`;
+    case "made_editor":
+      return `You can now edit the itinerary for ${place || "the trip"}`;
+    case "stop_suggested":
+      return `${data.name} suggested ${data.title || "a stop"} for ${trip}`;
+    case "suggestion_accepted":
+      return `${data.title || "Your suggested stop"} was added to the trip to ${place || "the trip"}`;
     case "itinerary_ready":
       return `Your itinerary for ${place || "your trip"} is ready`;
     case "itinerary_failed":

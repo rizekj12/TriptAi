@@ -6,7 +6,7 @@ import InviteModal from "./InviteModal";
 import { useCrew } from "../../hooks/useCrew";
 
 const MAX_BUBBLES = 4;
-const ROLE_LABEL = { owner: "Organizer", member: "Going", guest: "Guest" };
+const ROLE_LABEL = { owner: "Organizer", editor: "Editor", member: "Going", guest: "Guest" };
 
 // "Invite travel partner" button plus overlapping avatar bubbles of who's going; the bubbles
 // open a "Who's going" list. `tone` adapts it to a dark photo/sky background or a white card.

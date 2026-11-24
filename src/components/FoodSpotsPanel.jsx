@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, MapPin, Plus, RotateCcw, Utensils } from "lucide-react";
 import DayMap from "./DayMap";
+import VoteButton from "./trip/VoteButton";
+import { foodVoteKey, hasCrew } from "../utils/collab";
 import { useLoadFoodSpots } from "../hooks/useTrips";
 import { gmaps, distanceKm, formatDistance } from "../utils/helpers";
 import { theme } from "../utils/theme";
@@ -12,7 +14,9 @@ import { theme } from "../utils/theme";
 // traveler is staying, used for distances and a 🏨 pin.
 // readOnly (travel partners and guests): show saved spots only, never generate more,
 // since that runs on the trip owner's account
-export default function FoodSpotsPanel({ tripId, cities, foodSpots, homebases, readOnly = false }) {
+// collab: useCollab's data; on a trip with a crew, everyone signed in can thumbs-up spots (issue #38)
+export default function FoodSpotsPanel({ tripId, cities, foodSpots, homebases, readOnly = false, collab }) {
+  const crew = hasCrew(collab) ? collab : null;
   const [city, setCity] = useState(cities[0]);
   const [closestFirst, setClosestFirst] = useState(false);
   const load = useLoadFoodSpots(tripId);
@@ -176,6 +180,17 @@ export default function FoodSpotsPanel({ tripId, cities, foodSpots, homebases, r
                     </p>
                   )}
                   {spot.description && <p className="mt-1.5 text-sm text-gray-700">{spot.description}</p>}
+                  {crew && (
+                    <div className="mt-2">
+                      <VoteButton
+                        tripId={tripId}
+                        target="food"
+                        voteKey={foodVoteKey(city, spot.name)}
+                        voters={crew.votes?.food?.[foodVoteKey(city, spot.name)]}
+                        title={spot.name}
+                      />
+                    </div>
+                  )}
                 </div>
               </li>
             ))}
