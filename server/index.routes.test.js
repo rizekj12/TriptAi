@@ -213,9 +213,19 @@ describe("POST /api/trips/:tripId/days/:dayKey/regenerate (issue #37)", () => {
     expect(res.body.days[0].title).toBe("New day");
   });
 
-  test("only the organizer, only days on the trip", async () => {
+  test("an editor can re-plan a day too, with the organizer's profile needs (issue #38)", async () => {
+    db.rows("trip_members").find((m) => m.id === "m-approved").role = "editor";
+    db.rows("profiles").push({ id: "user-owner", accessibility_needs: ["wheelchair"], accessibility_notes: "" });
+    let seen;
+    mocks.regenerateDay = async (input) => ((seen = input), { title: "New day", notes: [], rainyDayBackup: null, markers: ["new_spot"], spots: { new_spot: { title: "New spot", coords: [1, 2] } } });
+    expect((await regenerate("token-member")).status).toBe(200);
+    expect(seen.traveler.needs).toEqual(["wheelchair"]);
+  });
+
+  test("only the organizer and editors, only days on the trip", async () => {
     mocks.regenerateDay = vi.fn();
     expect((await regenerate("token-member")).status).toBe(403);
+    expect((await regenerate("token-pending")).status).toBe(404);
     expect((await regenerate()).status).toBe(401);
     expect((await regenerate("token-owner", "d99")).status).toBe(404);
     expect(mocks.regenerateDay).not.toHaveBeenCalled();

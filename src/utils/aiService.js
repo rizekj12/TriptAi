@@ -136,5 +136,23 @@ export const searchPlaces = async (q, { city, country }) => {
 export const regenerateTripDay = (tripId, dayKey, note) =>
   apiJson("POST", `/api/trips/${tripId}/days/${encodeURIComponent(dayKey)}/regenerate`, { note }, { auth: true });
 
+// ---- Crew collaboration (issue #38, server/collaboration.js) ----
+const tripPath = (tripId) => `/api/trips/${encodeURIComponent(tripId)}`;
+
+// An itinerary edit ({ op, ... }, shared/itineraryEdits.js applyEdit) made by an editor: { days, spots }
+export const editTripItinerary = (tripId, edit) => apiJson("POST", `${tripPath(tripId)}/itinerary/edits`, { edit }, { auth: true });
+// The organizer makes a member an editor, or back: role "editor" | "member"
+export const setCrewRole = (tripId, memberId, role) =>
+  apiJson("POST", `${tripPath(tripId)}/crew/${memberId}/role`, { role }, { auth: true });
+// { role, crewSize, votes: { stop: { key: [{ name, isYou }] }, food: {...} }, suggestions: [...] }
+export const getCollab = (tripId) => apiJson("GET", `${tripPath(tripId)}/collab`, null, { auth: true });
+export const voteOn = (tripId, { target, key, up }) => apiJson("PUT", `${tripPath(tripId)}/votes`, { target, key, up }, { auth: true });
+export const suggestStop = (tripId, { dayKey, place, note }) =>
+  apiJson("POST", `${tripPath(tripId)}/suggestions`, { dayKey, place, note }, { auth: true });
+// decision: "accept" (replies with the trip's new { days, spots }) | "decline"
+export const answerSuggestion = (tripId, id, decision) =>
+  apiJson("POST", `${tripPath(tripId)}/suggestions/${id}/${decision}`, null, { auth: true });
+export const withdrawSuggestion = (tripId, id) => apiJson("DELETE", `${tripPath(tripId)}/suggestions/${id}`, null, { auth: true });
+
 // Signed-in GET to our API (hotel search, address checks), parsed as JSON
 export const apiGet = (path) => apiJson("GET", path, null, { auth: true });

@@ -11,6 +11,7 @@ vi.mock("../../hooks/useTrips", () => ({
   useEditItinerary: () => ({ mutate: vi.fn(), isError: false }),
   useRegenerateDay: () => ({ mutate: vi.fn(), isPending: false, isError: false }),
 }));
+vi.mock("../../hooks/useCollab", () => ({ useCollab: () => ({ data: undefined }) }));
 const auth = vi.hoisted(() => ({ user: { id: "me" } }));
 vi.mock("../../context/AuthContext", () => ({ useAuth: () => auth }));
 vi.mock("../../components/DayMap", () => ({ default: ({ items }) => <div data-testid="map">{items.length} pins</div> }));

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { BedDouble, MapPin, PlayCircle, Ticket, CloudRain, Check, Pencil } from "lucide-react";
 import EditDay from "./EditDay";
+import VoteButton from "./VoteButton";
+import DaySuggestions from "./DaySuggestions";
 import { useEditItinerary } from "../../hooks/useTrips";
-import { toggleDone } from "../../../shared/itineraryEdits.js";
+import { hasCrew } from "../../utils/collab";
 import { gmaps } from "../../utils/helpers";
 
 const card = "glass rounded-3xl p-5 shadow-[0_6px_20px_rgba(15,23,42,0.06)] sm:p-6";
@@ -11,8 +13,11 @@ const card = "glass rounded-3xl p-5 shadow-[0_6px_20px_rgba(15,23,42,0.06)] sm:p
 // and where the travelers sleep that night. The organizer (`canEdit`, with `tripId`) can tick
 // stops off during the trip by tapping their number, and edit the day (issue #37); everyone
 // sees what's been ticked off. `days` (describeDays) and `country` are for editing.
-export default function DayDetails({ day, spots, canEdit = false, tripId, days = [], country }) {
+// `collab` (useCollab's data, signed-in viewers on a trip with a crew; issue #38) adds thumbs
+// up on each stop and the day's suggested stops. Editors get `canEdit` too.
+export default function DayDetails({ day, spots, canEdit = false, tripId, days = [], country, collab }) {
   const [editing, setEditing] = useState(false);
+  const crew = hasCrew(collab) ? collab : null;
   const edit = useEditItinerary(tripId);
   const keys = (day.markers || []).filter((k) => spots[k]);
   const stops = keys.map((k) => spots[k]);
@@ -57,7 +62,7 @@ export default function DayDetails({ day, spots, canEdit = false, tripId, days =
                       // 44px target around the 32px circle
                       <button
                         type="button"
-                        onClick={() => edit.mutate((it) => toggleDone(it, day.key, key))}
+                        onClick={() => edit.mutate({ op: "toggleDone", dayKey: day.key, spotKey: key })}
                         aria-pressed={isDone}
                         aria-label={isDone ? `${spot.title}: done. Tap to undo` : `Mark ${spot.title} as done`}
                         className="-m-1.5 flex h-11 w-11 items-center justify-center rounded-full"
@@ -80,7 +85,7 @@ export default function DayDetails({ day, spots, canEdit = false, tripId, days =
                         <span className="sr-only">Estimated cost: </span>≈ {spot.estimatedCost}
                       </p>
                     )}
-                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[13px] font-bold">
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] font-bold">
                       <a
                         href={links.maps || gmaps(`${spot.title} ${spot.address || ""}`)}
                         target="_blank"
@@ -100,6 +105,11 @@ export default function DayDetails({ day, spots, canEdit = false, tripId, days =
                         </a>
                       )}
                     </div>
+                    {crew && (
+                      <div className="mt-1.5">
+                        <VoteButton tripId={tripId} target="stop" voteKey={key} voters={crew.votes?.stop?.[key]} title={spot.title} />
+                      </div>
+                    )}
                   </div>
                 </li>
               );
@@ -110,6 +120,8 @@ export default function DayDetails({ day, spots, canEdit = false, tripId, days =
         )}
         {!editing && edit.isError && <p className="mt-3 text-sm text-red-600">Couldn't save that: {edit.error.message}</p>}
       </section>
+
+      {crew && !editing && <DaySuggestions tripId={tripId} day={day} country={country} collab={crew} />}
 
       {notes.length > 0 && (
         <section className={card} aria-labelledby="day-tips">

@@ -17,6 +17,7 @@ import { useAuth } from "../context/AuthContext";
 import LoadingScreen from "../components/LoadingScreen";
 import GeneratingScreen from "../components/GeneratingScreen";
 import { useTrip, useStartGeneration, useDownloadPdf } from "../hooks/useTrips";
+import { useCollab } from "../hooks/useCollab";
 import { tripStatus } from "../utils/trips";
 import { describeDays } from "../utils/itineraryDays";
 import { todayIso } from "../utils/calendar";
@@ -38,7 +39,8 @@ export default function TripPage() {
 
   const { _form_data, ...itinerary } = trip.itinerary_data || {};
   const formData = _form_data || { country: trip.destination, cities: [] };
-  // Travel partners can see shared trips but not change them (see supabase/migrations)
+  // Travel partners see shared trips without the organizer's private details; editors among
+  // them can also change the itinerary (issue #38, see TripView)
   const viewer = trip.user_id === user?.id ? "owner" : "member";
 
   switch (tripStatus(trip)) {
@@ -97,8 +99,9 @@ function FailedScreen({ tripId, formData, error, canRetry }) {
   );
 }
 
-// viewer: "owner" (everything), "member" (a travel partner: view-only trip, plus their own
-// private reservations), or "guest" (no account: the same, opened from their personal link,
+// viewer: "owner" (everything), "member" (a travel partner: the trip without the organizer's
+// private details, plus their own private reservations; they vote and suggest stops, and an
+// editor can change the itinerary, issue #38), or "guest" (no account: the same, opened from their personal link,
 // `guestToken`). `crew` is the guest's copy of who's going (signed-in viewers load it themselves).
 //
 // Layout (mobile first): navy header with the section tabs, then for the itinerary a day strip
@@ -108,6 +111,9 @@ function FailedScreen({ tripId, formData, error, canRetry }) {
 // today if today is part of the trip.
 export function TripView({ tripId, itinerary, formData, foodSpots, homebases, viewer = "owner", crew, guestToken }) {
   const pdf = useDownloadPdf();
+  // Votes, suggestions and the viewer's role (signed-in viewers only)
+  const { data: collab } = useCollab(tripId, { enabled: viewer !== "guest" });
+  const canEdit = viewer === "owner" || collab?.role === "editor";
   const [searchParams, setSearchParams] = useSearchParams();
   const days = useMemo(() => describeDays(itinerary.days, formData), [itinerary.days, formData]);
   // "New York" for a trip in the viewer's own country, otherwise the country
@@ -223,10 +229,11 @@ export function TripView({ tripId, itinerary, formData, foodSpots, homebases, vi
                   <DayDetails
                     day={activeDay}
                     spots={itinerary.spots}
-                    canEdit={viewer === "owner"}
+                    canEdit={canEdit}
                     tripId={tripId}
                     days={days}
                     country={formData.country}
+                    collab={collab}
                   />
                 </div>
               </motion.div>
@@ -266,6 +273,7 @@ export function TripView({ tripId, itinerary, formData, foodSpots, homebases, vi
                 foodSpots={foodSpots}
                 homebases={homebases}
                 readOnly={viewer !== "owner"}
+                collab={collab}
               />
             )}
           </div>

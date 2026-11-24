@@ -17,6 +17,8 @@ import { registerMemberReservationRoutes } from "./memberReservations.js";
 import { registerTravelDocumentRoutes } from "./travelDocuments.js";
 import { registerTripPhotoRoutes } from "./tripPhotos.js";
 import { registerSavedTravelerRoutes } from "./savedTravelers.js";
+import { registerCollaborationRoutes } from "./collaboration.js";
+import { canEditRole } from "../shared/collab.js";
 import { createGuards } from "./limits.js";
 import { createNotifier } from "./notifications.js";
 import { createGenerationJobs } from "./generationJobs.js";
@@ -121,6 +123,13 @@ registerSavedTravelerRoutes(app, {
   serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
 });
 
+// Crew collaboration: editors, votes and suggested stops (issue #38)
+registerCollaborationRoutes(app, {
+  supabaseUrl: SUPABASE_URL,
+  serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  notifier,
+});
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -212,6 +221,12 @@ function checkAiConfig() {
 }
 
 // Supabase client that acts as the signed-in user, so row-level security still applies
+// Service-role client, for routes that check who is asking themselves (e.g. an editor
+// changing someone else's trip)
+const serviceAdmin = process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient(SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false, autoRefreshToken: false } })
+  : null;
+
 function supabaseAsUser(token) {
   return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     global: { headers: { Authorization: `Bearer ${token}` } },
@@ -450,28 +465,43 @@ app.get("/api/places/search", async (req, res) => {
 });
 
 // "Regenerate this day" (issue #37): a new plan for one day, with an optional note, saved on
-// the trip. Owner only, since it spends a Claude call. Replies with the trip's new { days, spots }.
+// the trip. The organizer and the trip's editors (issue #38) only, since it spends a Claude
+// call. Plans with the organizer's preferences and profile needs, whoever asks. Replies with
+// the trip's new { days, spots }.
 app.post("/api/trips/:tripId/days/:dayKey/regenerate", async (req, res) => {
   const token = req.headers.authorization?.replace(/^Bearer /, "");
   const configError = checkAiConfig();
   if (configError) return res.status(500).json({ error: configError });
   if (!token) return res.status(401).json({ error: "Please sign in" });
+  if (!serviceAdmin) return res.status(500).json({ error: "The server isn't set up for editing (SUPABASE_SERVICE_ROLE_KEY missing)" });
   const note = typeof req.body?.note === "string" ? req.body.note.trim().slice(0, MAX_NOTE) : "";
 
-  const supabase = supabaseAsUser(token);
-  const { data: { user } = {} } = await supabase.auth.getUser(token);
-  const { data: row } = await supabase.from("trips").select("id, user_id, status, itinerary_data").eq("id", req.params.tripId).maybeSingle();
+  const { data: { user } = {} } = await serviceAdmin.auth.getUser(token);
+  if (!user) return res.status(401).json({ error: "Please sign in" });
+  const { data: row } = await serviceAdmin.from("trips").select("id, user_id, status, itinerary_data").eq("id", req.params.tripId).maybeSingle();
   const trip = toTrip(row);
   const formData = trip?.itinerary_data?._form_data;
   if (!formData || !trip.itinerary_data.days?.length) return res.status(404).json({ error: "Trip not found" });
-  if (!user || trip.user_id !== user.id) return res.status(403).json({ error: "Only the trip's organizer can change its itinerary" });
+  let role = trip.user_id === user.id ? "owner" : null;
+  if (!role) {
+    const { data: membership } = await serviceAdmin
+      .from("trip_members")
+      .select("role, status")
+      .eq("trip_id", trip.id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (membership?.status !== "approved") return res.status(404).json({ error: "Trip not found" });
+    role = membership.role;
+  }
+  if (!canEditRole(role)) return res.status(403).json({ error: "Only the organizer and the trip's editors can change its itinerary" });
+  const supabase = serviceAdmin;
   const dayIndex = trip.itinerary_data.days.findIndex((d) => d.key === req.params.dayKey);
   if (dayIndex === -1) return res.status(404).json({ error: "That day isn't part of this trip" });
 
   const usage = createUsageTracker();
   try {
     const plan = await regenerateDay(
-      { formData, itinerary: trip.itinerary_data, dayIndex, note, traveler: await travelerNeeds(supabase, user.id) },
+      { formData, itinerary: trip.itinerary_data, dayIndex, note, traveler: await travelerNeeds(supabase, trip.user_id) },
       { anthropicKey: ANTHROPIC_API_KEY, geoapifyKey: process.env.GEOAPIFY_API_KEY, tripId: trip.id, usage }
     );
     // Applied to the latest saved copy, so edits made meanwhile to other days are kept
