@@ -14,7 +14,7 @@ vi.mock("../../../utils/trips", () => ({
     return { days: server.itinerary.days, spots: server.itinerary.spots };
   },
 }));
-const api = vi.hoisted(() => ({ searchPlaces: vi.fn(), regenerateTripDay: vi.fn() }));
+const api = vi.hoisted(() => ({ searchPlaces: vi.fn(), regenerateTripDay: vi.fn(), editTripItinerary: vi.fn() }));
 vi.mock("../../../utils/aiService", () => api);
 vi.mock("../../../context/AuthContext", () => ({ useAuth: () => ({ user: { id: "me" } }) }));
 // Reorder needs layout measurements jsdom doesn't have; a plain list is enough here
@@ -44,9 +44,10 @@ function Day({ dayIndex = 0, canEdit = true }) {
   const it = data.itinerary_data;
   return <DayDetails day={it.days[dayIndex]} spots={it.spots} canEdit={canEdit} tripId="t1" days={DAYS} country="Japan" />;
 }
-const setup = (props) => {
+const setup = (props, { role } = {}) => {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
   qc.setQueryData(["trip", "t1"], { id: "t1", itinerary_data: start() });
+  if (role) qc.setQueryData(["collab", "t1"], { role, crewSize: 2, votes: { stop: {}, food: {} }, suggestions: [] });
   render(<QueryClientProvider client={qc}><Day {...props} /></QueryClientProvider>);
   return qc;
 };
@@ -97,7 +98,7 @@ describe("editing a day", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Removed Skytree");
     fireEvent.click(screen.getByRole("button", { name: "Undo" }));
     await waitFor(() => expect(server.itinerary.days[0].markers).toEqual(["a", "b", "c"]));
-    expect(server.itinerary.spots.b).toEqual({ title: "Skytree" });
+    expect(server.itinerary.spots.b).toMatchObject({ title: "Skytree" });
   });
 
   test("add a stop from a place search near the day's city", async () => {
@@ -130,5 +131,19 @@ describe("editing a day", () => {
     fireEvent.click(screen.getByRole("button", { name: "Move Senso-ji down" }));
     expect(await screen.findByText(/Couldn't save that change: offline/)).toBeInTheDocument();
     expect(within(screen.getAllByRole("listitem")[0]).getByText("Senso-ji")).toBeInTheDocument();
+  });
+
+  // Issue #38: an editor can't write the organizer's trip row, so changes go through the server
+  test("an editor's changes are sent to the server as plain edits", async () => {
+    const { applyEdit } = await import("../../../../shared/itineraryEdits.js");
+    api.editTripItinerary.mockImplementation(async (_id, edit) => {
+      server.itinerary = applyEdit(server.itinerary, edit);
+      return { days: server.itinerary.days, spots: server.itinerary.spots };
+    });
+    setup({}, { role: "editor" });
+    startEditing();
+    fireEvent.click(screen.getByRole("button", { name: "Move Skytree up" }));
+    await waitFor(() => expect(server.itinerary.days[0].markers).toEqual(["b", "a", "c"]));
+    expect(api.editTripItinerary).toHaveBeenCalledWith("t1", { op: "move", dayKey: "d1", spotKey: "b", to: 0 });
   });
 });

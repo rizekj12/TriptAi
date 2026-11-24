@@ -5,22 +5,26 @@ import CrewAvatar from "./CrewAvatar";
 import InviteModal from "./InviteModal";
 import { useCrew, useRemoveCrewMember, useAnswerJoinRequest } from "../../hooks/useCrew";
 import { useSavedTravelers, useSaveCrewMember } from "../../hooks/useProfile";
+import { useSetCrewRole } from "../../hooks/useCollab";
 import { theme } from "../../utils/theme";
 
-const ROLE_LABEL = { owner: "Organizer", member: "Member", guest: "Guest" };
+const ROLE_LABEL = { owner: "Organizer", editor: "Editor", member: "Member", guest: "Guest" };
 const ROLE_STYLE = {
   owner: "bg-orchid-100 text-orchid-800",
+  editor: "bg-mango-100 text-mango-900",
   member: "bg-brand-100 text-brand-800",
   guest: "bg-gray-100 text-gray-700",
 };
 
 // "Travel Crew" tab: everyone on the trip. The organizer can invite and remove people and
-// answer join requests; a member can leave. `crew` passes the list in directly for a guest (read-only).
+// answer join requests, and choose editors (members who may change the itinerary, issue #38);
+// a member can leave. `crew` passes the list in directly for a guest (read-only).
 export default function CrewPanel({ tripId, destination, crew: given }) {
   const navigate = useNavigate();
   const fetched = useCrew(tripId, { enabled: !given });
   const crew = given ? { data: given, isLoading: false, isError: false } : fetched;
   const remove = useRemoveCrewMember(tripId);
+  const setRole = useSetCrewRole(tripId);
   const answer = useAnswerJoinRequest();
   // The organizer can save people to their profile's saved travelers, to invite them again
   const savedTravelers = useSavedTravelers();
@@ -157,6 +161,25 @@ export default function CrewPanel({ tripId, destination, crew: given }) {
                   </button>
                 )}
               </div>
+              {/* Editors change the itinerary; they still never see your confirmation codes. Guests
+                  have no account, so they can only view. */}
+              {isOwner && (p.role === "member" || p.role === "editor") && (
+                <div className="ml-14 mt-1">
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={p.role === "editor"}
+                    disabled={setRole.isPending}
+                    onClick={() => setRole.mutate({ memberId: p.id, role: p.role === "editor" ? "member" : "editor" })}
+                    className="inline-flex min-h-[44px] items-center gap-2 text-sm text-gray-700 disabled:opacity-60"
+                  >
+                    <span className={`relative inline-flex h-5 w-9 flex-none items-center rounded-full transition-colors ${p.role === "editor" ? "bg-brand-600" : "bg-gray-300"}`}>
+                      <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${p.role === "editor" ? "translate-x-[18px]" : "translate-x-0.5"}`} />
+                    </span>
+                    Can edit the itinerary
+                  </button>
+                </div>
+              )}
               {/* Shared by the member for this trip (organizer only, around the trip dates) */}
               {p.emergency && (
                 <div className="ml-14 mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg bg-coral-50 px-3 py-2 text-xs text-coral-900">
@@ -181,6 +204,12 @@ export default function CrewPanel({ tripId, destination, crew: given }) {
       )}
       {remove.isError && <p className="mt-3 text-sm text-red-600">{remove.error.message}</p>}
       {saveTraveler.isError && <p className="mt-3 text-sm text-red-600">{saveTraveler.error.message}</p>}
+      {setRole.isError && <p className="mt-3 text-sm text-red-600">{setRole.error.message}</p>}
+      {isOwner && people.some((p) => p.role === "member" || p.role === "editor") && (
+        <p className="mt-3 text-xs text-gray-500">
+          Editors can change the itinerary and answer suggested stops. They never see your reservations or confirmation codes.
+        </p>
+      )}
 
       {isOwner && (
         <InviteModal open={inviteOpen} onClose={() => setInviteOpen(false)} tripId={tripId} destination={destination} />

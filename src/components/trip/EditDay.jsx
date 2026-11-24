@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Reorder, useDragControls } from "framer-motion";
-import { ChevronDown, ChevronUp, GripVertical, Loader2, Plus, Search, Sparkles, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, GripVertical, Loader2, Plus, Sparkles, Trash2 } from "lucide-react";
 import { useEditItinerary, useRegenerateDay } from "../../hooks/useTrips";
-import { searchPlaces } from "../../utils/aiService";
-import { reorderStops, moveStop, moveStopToDay, removeStop, restoreStop, addStop } from "../../../shared/itineraryEdits.js";
+import PlaceSearch from "./PlaceSearch";
 
 const iconButton =
   "flex h-11 w-11 flex-none items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 disabled:opacity-30";
 
 // The organizer's editing tools for one day (issue #37): reorder (drag the handle, or the
 // arrows), move to another day, remove (with undo), add a stop from a place search, and
-// re-plan the day with AI. Every change saves straight away.
+// re-plan the day with AI. Every change saves straight away. Editors (issue #38) get the same
+// tools; useEditItinerary sends their changes through the server.
 // `days`: describeDays() for every day (labels for "Move to"); `country` narrows place search.
 export default function EditDay({ tripId, day, spots, days, country }) {
   const edit = useEditItinerary(tripId);
@@ -20,7 +20,7 @@ export default function EditDay({ tripId, day, spots, days, country }) {
   const [dragOrder, setDragOrder] = useState(null);
   const order = dragOrder || markers;
   const drop = () => {
-    if (dragOrder && dragOrder.join("|") !== markers.join("|")) save((it) => reorderStops(it, day.key, dragOrder));
+    if (dragOrder && dragOrder.join("|") !== markers.join("|")) save({ op: "reorder", dayKey: day.key, order: dragOrder });
     setDragOrder(null);
   };
   const [removed, setRemoved] = useState(null); // { key, spot, index } for Undo
@@ -28,12 +28,12 @@ export default function EditDay({ tripId, day, spots, days, country }) {
   const save = (change) => edit.mutate(change);
   const remove = (key) => {
     setRemoved({ key, spot: spots[key], index: markers.indexOf(key) });
-    save((it) => removeStop(it, day.key, key));
+    save({ op: "remove", dayKey: day.key, spotKey: key });
   };
   const undo = () => {
     const { key, spot, index } = removed;
     setRemoved(null);
-    save((it) => restoreStop(it, day.key, key, spot, index));
+    save({ op: "restore", dayKey: day.key, spotKey: key, spot, index });
   };
 
   return (
@@ -51,8 +51,8 @@ export default function EditDay({ tripId, day, spots, days, country }) {
               day={day}
               days={days}
               onDrop={drop}
-              onMove={(to) => save((it) => moveStop(it, day.key, key, to))}
-              onMoveToDay={(toKey) => save((it) => moveStopToDay(it, day.key, key, toKey))}
+              onMove={(to) => save({ op: "move", dayKey: day.key, spotKey: key, to })}
+              onMoveToDay={(toKey) => save({ op: "moveToDay", dayKey: day.key, spotKey: key, toDayKey: toKey })}
               onRemove={() => remove(key)}
             />
           ))}
@@ -69,10 +69,12 @@ export default function EditDay({ tripId, day, spots, days, country }) {
       )}
       {edit.isError && <p className="text-sm text-red-600">Couldn't save that change: {edit.error.message}</p>}
 
-      <AddStop
+      <PlaceSearch
+        id="add-stop"
+        label={<><Plus size={16} /> Add a stop</>}
         city={day.city}
         country={country}
-        onAdd={(place) => save((it) => addStop(it, day.key, place).itinerary)}
+        onPick={(place) => save({ op: "add", dayKey: day.key, place })}
       />
       <ReplanDay tripId={tripId} day={day} />
     </div>
@@ -132,77 +134,6 @@ function EditableStop({ spotKey, spot, index, count, day, days, onDrop, onMove, 
         </button>
       </div>
     </Reorder.Item>
-  );
-}
-
-// Search for a place near the day's city and add it as the last stop
-function AddStop({ city, country, onAdd }) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [state, setState] = useState("idle"); // idle | searching | error
-
-  useEffect(() => {
-    const q = query.trim();
-    if (q.length < 2) {
-      setResults([]);
-      setState("idle");
-      return undefined;
-    }
-    let cancelled = false;
-    setState("searching");
-    // Waits for a pause in typing, so each keystroke isn't a search
-    const timer = setTimeout(() => {
-      searchPlaces(q, { city, country })
-        .then((places) => !cancelled && (setResults(places), setState("idle")))
-        .catch(() => !cancelled && setState("error"));
-    }, 350);
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
-  }, [query, city, country]);
-
-  const pick = (place) => {
-    onAdd(place);
-    setQuery("");
-    setResults([]);
-  };
-
-  return (
-    <div>
-      <label htmlFor="add-stop" className="mb-1.5 flex items-center gap-1.5 text-sm font-bold text-slate-800">
-        <Plus size={16} /> Add a stop
-      </label>
-      <div className="relative">
-        <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
-        <input
-          id="add-stop"
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={`Search places in ${city || "this city"}`}
-          className="min-h-[44px] w-full rounded-xl border-2 border-slate-200 py-2 pl-9 pr-3 text-base focus:border-orchid-500 focus:outline-none"
-          autoComplete="off"
-        />
-        {state === "searching" && <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-slate-400" />}
-      </div>
-      {state === "error" && <p className="mt-1.5 text-sm text-red-600">Place search isn't available right now.</p>}
-      {results.length > 0 && (
-        <ul className="mt-2 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200">
-          {results.map((p) => (
-            <li key={`${p.title}|${p.address}`}>
-              <button type="button" onClick={() => pick(p)} className="block min-h-[44px] w-full px-3 py-2 text-left hover:bg-orchid-50">
-                <span className="block font-semibold text-slate-900">{p.title}</span>
-                <span className="block truncate text-xs text-slate-600">{p.address}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-      {query.trim().length >= 2 && state === "idle" && !results.length && (
-        <p className="mt-1.5 text-sm text-slate-600">No places found. Try another name.</p>
-      )}
-    </div>
   );
 }
 
